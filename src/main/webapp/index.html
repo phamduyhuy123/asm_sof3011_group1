@@ -12,8 +12,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
 </head>
-<body>
-
-
+<body ng-app="myapp" ng-controller="myctrl">
+<h1>Hello</h1>
+    <div class="container">
+        <table class="table">
+            <tr ng-repeat="e in emps">
+                <td>{{e.id}}</td>
+                <td>{{e.name}}</td>
+            </tr>
+        </table>
+    </div>
+<script src="js/indexController.js"></script>
 </body>
 </html>
