@@ -47,7 +47,9 @@
           <element id="library" level="project" name="Maven: org.apache.cxf:cxf-rt-ws-addr:3.4.5" />
           <element id="library" level="project" name="Maven: org.apache.cxf:cxf-rt-ws-policy:3.4.5" />
           <element id="library" level="project" name="Maven: org.apache.neethi:neethi:3.1.1" />
-          <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.10.1" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.14.2" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.14.2" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.14.2" />
         </element>
       </element>
       <element id="directory" name="META-INF">
