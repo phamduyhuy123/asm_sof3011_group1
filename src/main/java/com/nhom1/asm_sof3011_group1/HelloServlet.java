@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet("/testapi1")
+@WebServlet(name = "test", value = "/testapi1")
 public class HelloServlet extends HttpServlet {
 
 
@@ -22,7 +22,7 @@ public class HelloServlet extends HttpServlet {
         Employee emp=new Employee();
         
         Gson gson=new Gson();
-        
+
         List<Employee> employees=new ArrayList<>();
         employees.add(Employee.builder().id(1).name("wert").build());
         employees.add(Employee.builder().id(2).name("wefewf").build());
