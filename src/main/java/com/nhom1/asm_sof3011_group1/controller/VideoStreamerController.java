@@ -7,12 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
-@WebServlet("/streamVideo")
+@WebServlet("/streamVideo/*")
 public class VideoStreamerController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        String uri =request.getRequestURI();
+        System.out.println(uri.substring(uri.lastIndexOf("/")));
         //get the video file's absolute path
-        String videoFilePath = "C:\\Users\\ACER\\Dropbox\\PC\\Downloads\\Video\\received_1165370370973872.mp4";
+        String videoFilePath = "C:\\Users\\ACER\\Dropbox\\PC\\Downloads\\Video\\"+uri.substring(uri.lastIndexOf("/"));
 
         File videoFile = new File(videoFilePath);
         long fileSize = videoFile.length();
