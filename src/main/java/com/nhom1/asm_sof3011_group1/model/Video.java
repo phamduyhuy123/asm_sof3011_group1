@@ -2,11 +2,9 @@ package com.nhom1.asm_sof3011_group1.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.UUID;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -22,5 +20,12 @@ public class Video {
     private String poster;
     private Integer views;
     private String description;
+    private String fileName;
     private boolean active;
+    @Temporal(TemporalType.DATE)
+    private Date dateUpload=new Date();
+    @OneToMany(mappedBy = "video")
+    List<Favorite> favorites;
+    @OneToMany(mappedBy = "video")
+    List<Share> shares;
 }
