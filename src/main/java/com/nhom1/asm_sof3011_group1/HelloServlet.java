@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "test", value = "/testapi1")
 public class HelloServlet extends HttpServlet {
 
-
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         response.setContentType("application/json");

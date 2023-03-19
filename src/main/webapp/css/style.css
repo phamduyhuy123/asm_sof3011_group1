@@ -1,3 +1,10 @@
+body {
+    padding: 0px;
+    margin: 0 auto;
+    /* background-color: lightgray; */
+    font-family: "Roboto", Sans-serif;
+    
+}
 .active{    
     background-color: cornsilk;
     color: red;
