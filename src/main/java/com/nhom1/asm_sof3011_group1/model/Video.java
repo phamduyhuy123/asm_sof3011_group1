@@ -1,10 +1,12 @@
 package com.nhom1.asm_sof3011_group1.model;
 
+
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -14,7 +16,6 @@ import java.util.List;
 @Setter
 public class Video {
     @Id
-    @GeneratedValue
     private String id;
     private String title;
     private String poster;

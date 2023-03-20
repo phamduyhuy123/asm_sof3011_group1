@@ -1,10 +1,9 @@
 package com.nhom1.asm_sof3011_group1.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhom1.asm_sof3011_group1.Employee;
+
 import com.nhom1.asm_sof3011_group1.dao.VideoDao;
 import com.nhom1.asm_sof3011_group1.model.Video;
-import com.nhom1.asm_sof3011_group1.utils.JpaUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
