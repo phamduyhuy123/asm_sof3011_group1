@@ -15,8 +15,10 @@ public class Share {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JoinColumn(name = "userId")
     private User user;
     @ManyToOne
+    @JoinColumn(name = "videoId")
     private Video video;
     private String emails;
     @Temporal(TemporalType.DATE)

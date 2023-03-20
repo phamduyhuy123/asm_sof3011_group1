@@ -1,14 +1,15 @@
 package com.nhom1.asm_sof3011_group1.dao;
 
 import com.nhom1.asm_sof3011_group1.model.User;
+import com.nhom1.asm_sof3011_group1.utils.JpaUtils;
 
 
-
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.UUID;
 
 public class UserDao extends DAO<User, UUID>  {
-
+    private static final EntityManager em=JpaUtils.getEntityManger();
     public UserDao(){
 
     }
@@ -34,6 +35,8 @@ public class UserDao extends DAO<User, UUID>  {
 
     @Override
     public List<User> findAll() {
+//        String jpql="SELECT v FROM Video v";
+//        TypedQuery<User> query=em.createQuery(jpql,)
         return null;
     }
 
@@ -44,6 +47,6 @@ public class UserDao extends DAO<User, UUID>  {
 
     @Override
     protected void finalize() throws Throwable {
-        super.finalize();
+        em.close();
     }
 }

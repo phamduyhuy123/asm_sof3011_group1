@@ -1,10 +1,17 @@
-var app = angular.module("myapp", []);
-app.controller("myctrl", function ($scope, $http, $rootScope) {
-    $http.get('/testapi1').then(function (response) {
-        $scope.emps = response.data;
 
+
+app.controller("myctrl", function ($scope, $http, $rootScope,$location) {
+    // console.log($location.path())
+    // $scope.showLeftNav = $location.path() === '/videoDetail';
+    $rootScope.videos = [];
+    $http.get('/videos').then(function (response) {
+        $rootScope.videos = response.data;
     }, reason => {
-        alert("Lỗi")
+        // alert("Lỗi")
     });
-
+    var iHam= document.querySelector("#iconCollapseMenu")
+    var menuCollapse=document.querySelector("#leftNav")
+    console.log(iHam)
+    console.log(menuCollapse)
 });
+

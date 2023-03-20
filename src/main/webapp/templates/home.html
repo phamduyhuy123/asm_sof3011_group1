@@ -1,0 +1,41 @@
+<div class="p-3 text-white ">
+    <div class="row  row-cols-1 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 p-3 align-items-center">
+
+        <div ng-repeat="v in videos" class="col p-2">
+            <a href="#!videoDetail/{{v.id}}">
+                <div role="button"  class="card  bg-black border-0 shadow">
+                    <div class="position-relative">
+                        <img src="images/thumbnail.png" class="card-img-top" height="250px">
+                        <span class="position-absolute end-0 bottom-0 translate-middle-x bg-black rounded-2">15:50</span>
+                    </div>
+                    <div class="card-body p-1 ">
+                        <div class="d-flex mt-2 p-2 ">
+                            <img class="rounded-circle " src="images/artworks-PDvsxHzLPH2NyyyE-Q8yAxg-t500x500.jpg" alt=""
+                                height="25" width="25">
+                            <div class="ms-2 video-quick-infor d-flex flex-column">
+                                <p class="fw-bold fw-2 video-title-card" for="">{{v.title}}</p>
+    
+                                <span class="" style="color: gray; margin-top: -20px;" class="">username</span>
+    
+                                <span>10 N lượt xem</span>
+                            </div>
+                            <div class="ms-1">
+                                <i class="fs-5 bi bi-three-dots-vertical"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+        </div>
+
+    </div>
+</div>
+<style>
+    .video-quick-infor .video-title-card {
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
