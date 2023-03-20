@@ -33,7 +33,7 @@ public class VideoDao extends DAO<Video,String>{
 
     @Override
     public List<Video> findAll() {
-        String jpql="SELECT v FROM Video v";
+        String jpql="SELECT v FROM Video v ";
         TypedQuery<Video> query=em.createQuery(jpql,Video.class);
         List<Video> list=query.getResultList();
         return list;

@@ -22,5 +22,9 @@ public class JpaUtils {
         factory=null;
     }
 
+    public static void main(String[] args) {
+        JpaUtils.getEntityManger();
+    }
+
 
 }

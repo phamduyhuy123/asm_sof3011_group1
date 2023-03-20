@@ -3,7 +3,6 @@ package com.nhom1.asm_sof3011_group1.dao;
 import com.nhom1.asm_sof3011_group1.model.User;
 import com.nhom1.asm_sof3011_group1.utils.JpaUtils;
 
-
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.UUID;
