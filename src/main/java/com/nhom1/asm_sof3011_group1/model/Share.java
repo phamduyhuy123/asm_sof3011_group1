@@ -1,10 +1,10 @@
 package com.nhom1.asm_sof3011_group1.model;
 
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.util.Date;
 @Entity
 @AllArgsConstructor

@@ -1,10 +1,13 @@
-<!-- <%@ page contentType="text/html;charset=UTF-8" language="java" %> -->
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <!-- CSS File -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 
@@ -15,9 +18,8 @@
     <script src="https://kit.fontawesome.com/2d8a439e72.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-    <link href="css/style.css">
+    <link rel="stylesheet" href="css/style.css" />
     <script>
         var app = angular.module("myapp", ['ngRoute']);
     </script>
@@ -26,28 +28,134 @@
     <script src="js/homeController.js"></script>
     <script src="js/videoDetail.js"></script>
     <script src="js/navCtrl.js"></script>
+    <script language="javascript">
+
+        $(window).resize(function () {
+
+            var width = $(window).width();
+            console.log(width);
+            if ($('.search-768').hasClass('show')) {
+                if (width <= 768) {
+                    $('.search-768').addClass('show');
+
+                }
+                else {
+                    $('.search-768').removeClass('show');
+                }
+            }
+
+        });
+
+    </script>
 </head>
 
-<body ng-app="myapp" ng-controller="myctrl" class="bg-dark overflow-x-hidden">
-    <ng-include class="" src="'templates/navbar.html'"></ng-include>
-    <ng-include id="sidebarMenu"
-        class="h-100 position-fixed collapse collapse-horizontal d-lg-block sidebar bg-white "
-        src="'templates/leftNav.html'"></ng-include>
-
-
-    <ng-view id="mainContent" class="">
-
-    </ng-view>
+<body class="bg-dark" ng-app="myapp" ng-controller="myctrl">
 
 
 
-    <style>
-        .sidebar {
+    <header class="header ">
+        <div class="logo left">
+            <i id="menuHamburger" class="material-icons" data-bs-toggle="collapse" data-bs-target="#sideMenu"
+                aria-expanded="false" aria-controls="sideMenu">menu</i>
+            <a href="#!home" class="text-decoration-none">
+                <img width="50" height="40" src="images/icons8_youtube_50px.png">
+                <span id="companyName" class="fs-5">YouTube</span>
+            </a>
 
-            box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
-            z-index: 600;
-        }
-    </style>
+        </div>
+
+        <form class="d-flex  mx-5  d-none d-sm-block " role="search" style="width: 35%;"> 
+            <div class="input-group ">
+                <input type="text" class="form-control rounded-start-pill" placeholder="Bạn cần tìm sản phẩm gì?"
+                    aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <button class="input-group-text rounded-end-pill" id="basic-addon2"><i
+                        class="bi bi-search"></i></button>
+            </div>
+        </form>
+        <form id="search-768" class="search-768 w-100 collapse d-lg-none d-md-none d-sm-none  position-fixed sticky-top mt-2" role="search"
+            style="margin: -15px; padding: 15px; height: 60px; z-index: 6666; background-color: black;">
+            <div class="d-flex">
+                <button class="btn bg-light text-black" data-bs-toggle="collapse" data-bs-target="#search-768"
+                    aria-expanded="false" aria-controls="search-768"><i class="bi bi-arrow-left"></i></button>
+                <div class="input-group ">
+                    <input type="text" class=" form-control rounded-start-pill" placeholder="Bạn cần tìm sản phẩm gì?"
+                        aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    <button class="input-group-text rounded-end-pill" id="basic-addon2"><i
+                            class="bi bi-search"></i></button>
+                </div>
+            </div>
+        </form>
+        <!-- <div>
+        <div class="input-group w-50 search me-auto ms-5 ">
+            <input type="text" class="form-control rounded-start-pill" placeholder="Search" aria-label="Search" >
+            <button class="btn btn-outline-secondary rounded-end-pill" ><i class="bi bi-search"></i></button>
+        </div>
+    </div> -->
+        <div class="icons right">
+            <i onclick="" class="material-icons bi bi-search d-lg-none  d-md-none d-sm-none" data-bs-toggle="collapse" data-bs-target="#search-768"
+                aria-expanded="false" aria-controls="search-768"></i>
+            <i class="material-icons">notifications</i>
+            <i class="material-icons display-this">account_circle</i>
+        </div>
+    </header>
+    <main class="bg-black ">
+        <div class="row w-100">
+            <div class="collapse collapse-horizontal side-bar shadow show overflow-x-hidden col col-lg-2 col-md-3 col-12" id="sideMenu">
+                <div class="nav ">
+                    <a class="nav-link active" href="#!home">
+                        <i class="material-icons">home</i>
+                        <span>Home</span>
+                    </a>
+                    <a class="nav-link">
+                        <i class="material-icons bi bi-heart-fill"></i>
+                        <span>Favorites</span>
+                    </a>
+                    <a class="nav-link">
+                        <i class="material-icons">subscriptions</i>
+                        <span>Subscriptions</span>
+                    </a>
+                </div>
+                <hr>
+                <a class="nav-link">
+                    <i class="material-icons">history</i>
+                    <span>History</span>
+                </a>
+                <a class="nav-link">
+                    <i class="material-icons">play_arrow</i>
+                    <span>Your Videos</span>
+                </a>
+                <a class="nav-link">
+                    <i class="material-icons">thumb_up</i>
+                    <span>Liked Videos</span>
+                </a>
+            </div>
+            <div class="content col col-lg-10 col-md-9 col-12 pe-0">
+                <ng-view>
+    
+                </ng-view>
+            </div>
+        </div>
+        <div class="bottom-bar shadow sticky-bottom position-fixed w-100  pt-5 row text-center px-3 text-decoration-none"
+            style="height: 100px;">
+
+            <a class="rounded-5 nav-link active mt-auto col-4 text-center p-2">
+                <i class="material-icons">home</i>
+                <span>Home</span>
+            </a>
+            <a class="rounded-5 nav-link mt-auto col-4 text-center p-2">
+                <i class="material-icons bi bi-heart-fill"></i>
+                <span>Favorites</span>
+            </a>
+            <a class="rounded-5 nav-link mt-auto col-4 text-center p-2">
+                <i class="material-icons">subscriptions</i>
+                <span>Subscriptions</span>
+            </a>
+
+        </div>
+
+        
+    </main>
+    <!-- Main Body Ends -->
 </body>
 
 </html>

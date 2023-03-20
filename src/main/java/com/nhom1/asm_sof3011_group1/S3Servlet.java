@@ -1,5 +1,12 @@
 package com.nhom1.asm_sof3011_group1;
 import java.io.IOException;
+
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.nhom1.asm_sof3011_group1.utils.AwsS3Service;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -8,11 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.nhom1.asm_sof3011_group1.utils.AwsS3Service;
 
 @WebServlet(name = "testS3Service", value = "/asmS3")
 @MultipartConfig

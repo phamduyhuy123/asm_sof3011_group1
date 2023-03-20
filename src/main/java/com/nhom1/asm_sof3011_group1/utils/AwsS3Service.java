@@ -17,6 +17,7 @@ public class AwsS3Service {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(Regions.AP_SOUTHEAST_1)
                 .build();
+
         return s3client;
     }
 
