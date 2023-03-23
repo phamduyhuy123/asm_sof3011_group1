@@ -5,28 +5,43 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Getter
 @Setter
+@Table(name = "video")
 public class Video {
+
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "video_id")
+    private Long id;
+
     private String title;
-    private String poster;
-    private Integer views;
+
     private String description;
-    private String fileName;
-    private boolean active;
-    @Temporal(TemporalType.DATE)
-    private Date dateUpload=new Date();
-    @OneToMany(mappedBy = "video")
-    List<Favorite> favorites;
-    @OneToMany(mappedBy = "video")
-    List<Share> shares;
+
+    @Column(name = "upload_date")
+    private Date uploadDate;
+
+    private Long views;
+
+    private Long duration;
+
+    @Column(name = "thumbnail_url")
+    private String thumbnailUrl;
+
+    @Column(name = "video_url")
+    private String videoUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
+
+    // getters and setters
 }

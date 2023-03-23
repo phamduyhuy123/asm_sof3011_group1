@@ -1,0 +1,198 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+</head>
+<body> -->
+<div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-1 p-4">
+    <div class="col col-lg-9 col-md-9 col-sm-12 col-12">
+        <video style="height: 450px;" class="w-100" ng-src="{{videoUrl}}" controls></video>
+        <div class="w-100 text-white bg-dark-subtle rounded-4 p-3">
+            <h2 class="fw-bold">
+                {{video.title}}
+            </h2>
+            <div class="d-flex ">
+                <div class="me-auto d-flex">
+                    <div class="author">
+                        <img class="rounded-circle" src="api/user/loadAvatar?userId={{video.user.id}}" alt="" />
+                    </div>
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold fs-5 text-black-50">{{video.user.username}}</span>
+                        <!-- <span>{{relativeTimeFilter(v.dateUpload)}}</span> -->
+                    </div>
+                    <button class="btn btn-light text-black rounded-5 ms-2">Đăng ký</button>
+                </div>
+                <div class="ms-auto">
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                        <input type="radio" class="btn-check" name="isLike" id="likeBtn" autocomplete="off">
+                        <label class="btn btn-outline-dark rounded-start-pill" for="likeBtn"><i
+                                class="fa-regular fa-thumbs-up"></i>
+                            <!-- lượt like -->
+                            <span></span>
+                        </label>
+                        <input type="radio" class="btn-check" name="isLike" id="disLikeBtn" autocomplete="off">
+                        <label class="btn btn-outline-dark" for="disLikeBtn"><i class="fa-regular fa-thumbs-down"></i>
+                            <!-- dislike -->
+                            <span></span>
+                        </label>
+                    </div>
+                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#shareModal">
+                        <i class="bi bi-share"></i>
+                        <span> Share</span>
+                    </button>
+                    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModal"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Share this video to your friend
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="email" placeholder="Your friends email">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Share</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rounded-4 w-100 mt-2 bg-darkbg-opacity-50 p-3 text-white text-black">
+            <div class="d-flex">
+                <!-- lượt bình luận -->
+                <span></span>
+
+            </div>
+            <!-- user bình luận -->
+            <form method="post" class="d-flex w-100">
+                <div class="author">
+                    <img class="rounded-circle" src="api/user/loadAvatar?userId={{video.user.id}}" alt="" />
+                </div>
+                <div class="w-100">
+                    <div class="form-floating ms-1 w-100">
+                        <textarea class="form-control w-100 text-black" placeholder="Leave a comment here"
+                            id="floatingTextarea2" style="height: 100px"></textarea>
+                        <label class="text-black" for="floatingTextarea2">Comments</label>
+                    </div>
+                    <div class="border-top mt-2 pt-md-2 w-100 text-end">
+                        <button type="button" class="btn btn-light">Cancel</button>
+                        <button type="button" class="btn btn-light" disabled>Comment</button>
+                    </div>
+                </div>
+
+            </form>
+            <div class="comments p-2 text-white">
+                <div class="d-flex  p-2">
+                    <div class="author">
+                        <img class="rounded-circle" src="api/user/loadAvatar?userId={{video.user.id}}" alt="" />
+                    </div>
+                    <div class="d-flex flex-column ms-1">
+                        <div>
+                            <!-- tên người bình luận -->
+                            <span class="fw-bolder text-white">{{video.user.username}}</span>
+                            <!-- thời điểm bình luận -->
+                            <span class="text-secondary">{{relativeTimeFilter(video.uploadDate)}}</span>
+                        </div>
+                        <div>
+                            <!-- bình luận  -->
+                            <p class="fw-bold text-white">
+                                adasdasdasd fnewign ewfubewuhfbwef ewfuwebhffffffffffffffff fweuf2384y2738yr23ry
+                                378ry823y 3278ry 32fh872rfg32 78237f3 27f8g28g 45 89y40 3y h
+                            </p>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-secondary rounded-circle">
+                                <i class="fa-regular fa-thumbs-up"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary rounded-circle">
+                                <i class="fa-regular fa-thumbs-down"></i>
+                            </button>
+                            <button class="btn btn-outline-light rounded-4 fs-6">
+                                Phản hồi
+                            </button>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-light rounded-4 fs-6 " type="button"
+                                data-bs-toggle="collapse" ng-attr-data-bs-target="#repleComment{{$index}}"
+                                aria-expanded="false" aria-controls="collapseExample" ng-click="isCollapsed{{$index}} = !isCollapsed{{$index}}"> 
+                                 1 phản hồi
+                                <i ng-class="{'bi-chevron-down': isCollapsed{{$index}}, 'bi-chevron-up': !isCollapsed{{$index}}}"></i>
+                            </button>
+                            <div class="collapse p-2" ng-attr-id="repleComment{{$index}}"
+                                ng-class="{'show': !isCollapsed{{$index}}}">
+                                <div class="d-flex flex-column ms-1">
+                                    <div>
+                                        <!-- tên người bình luận -->
+                                        <span class="fw-bolder text-white">{{video.user.username}}</span>
+                                        <!-- thời điểm bình luận -->
+                                        <span class="text-secondary">{{relativeTimeFilter(video.uploadDate)}}</span>
+                                    </div>
+                                    <div>
+                                        <!-- bình luận  -->
+                                        <p class="fw-bold text-white">
+                                            adasdasdasd fnewign ewfubewuhfbwef ewfuwebhffffffffffffffff
+                                            fweuf2384y2738yr23ry
+                                            378ry823y 3278ry 32fh872rfg32 78237f3 27f8g28g 45 89y40 3y h
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-outline-secondary rounded-circle">
+                                            <i class="fa-regular fa-thumbs-up"></i>
+                                        </button>
+                                        <button class="btn btn-outline-secondary rounded-circle">
+                                            <i class="fa-regular fa-thumbs-down"></i>
+                                        </button>
+                                        <button class="btn btn-outline-light rounded-4 fs-6">
+
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="d-flex flex-column col col-lg-3 col-md-3 col-sm-12 col-12 mt-3 mt-lg-0 mt-md-0 mt-sm-0 ">
+        <div ng-repeat="v in videos track by $index" class=" bg-black shadow p-lg-3 p-md-3 p-sm-4 p-5">
+            <a href="#!videoDetail?videoId={{v.id}}" class="card bg-black">
+                <img id="th" class="card-img-top" src="video/poster?videoId={{v.id}}" alt="" height="170px">
+                <div class="card-body details d-flex">
+                    <div class="author">
+                        <img class="rounded-circle" src="api/user/loadAvatar?userId={{v.user.id}}" alt="" />
+                    </div>
+                    <div class="title text-white">
+                        <h3 class="text-white fw-bold">
+                            {{v.title}}
+                        </h3>
+                        <a href="">
+                            {{v.user.username}}
+                        </a>
+                        <span>{{v.views | viewNumber}} lượt xem</span>
+                        <span>{{relativeTimeFilter(v.uploadDate)}}</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- </body>
+</html> -->
