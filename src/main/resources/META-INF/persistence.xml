@@ -5,9 +5,14 @@
              version="2.2">
     <persistence-unit name="PolyOE">
         <class>com.nhom1.asm_sof3011_group1.model.Video</class>
-        <class>com.nhom1.asm_sof3011_group1.model.Share</class>
         <class>com.nhom1.asm_sof3011_group1.model.User</class>
-        <class>com.nhom1.asm_sof3011_group1.model.Favorite</class>
+        <class>com.nhom1.asm_sof3011_group1.model.Channel</class>
+        <class>com.nhom1.asm_sof3011_group1.model.Like</class>
+        <class>com.nhom1.asm_sof3011_group1.model.Playlist</class>
+        <class>com.nhom1.asm_sof3011_group1.model.PlaylistVideo</class>
+        <class>com.nhom1.asm_sof3011_group1.model.PlaylistVideoId</class>
+        <class>com.nhom1.asm_sof3011_group1.model.Subscription</class>
+        <class>com.nhom1.asm_sof3011_group1.model.ViewHistory</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://26.4.137.185:3306/asmsof3011"/>

@@ -14,32 +14,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
-@WebServlet("/streamVideo/*")
+@WebServlet("/streamVideo")
 public class VideoStreamerController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String uri =request.getRequestURI();
-        String id = uri.substring(uri.lastIndexOf("/")+1);
+        Long id =  Long.parseLong(request.getParameter("videoId"));
         VideoDao videoDao=new VideoDao();
         Video video= videoDao.findById(id);
-        String fileName=video.getFileName();
+        String fileName=video.getVideoUrl();
         // Get the S3 bucket and key for the video file
         String bucketName = AwsS3Service.BUCKET_NAME;
         String key = "video/"+fileName;
 
-        // Create an S3 client
+
         AmazonS3 s3client = AwsS3Service.s3Client();
 
-        // Get the S3 object for the video file
+
         S3Object s3Object = s3client.getObject(new GetObjectRequest(bucketName, key));
-        // Set the content type of the video file based on the file extension
+
         String contentType = getServletContext().getMimeType(fileName);
         response.setContentType(contentType);
 
-        // Set the content length of the video file
+
         long contentLength = s3Object.getObjectMetadata().getContentLength();
         response.setContentLengthLong(contentLength);
 
-        // Set the content range if the request includes a "Range" header
+
         String range = request.getHeader("Range");
         InputStream inputStream=null;
         String[] rangeParts = range.substring(6).split("-");
@@ -58,15 +57,11 @@ public class VideoStreamerController extends HttpServlet {
 
         }
 
-        // Set the cache control header to cache the video file for one hour
 
-
-        // Get the input stream from the S3 object and write it to the response output stream
         inputStream = new BufferedInputStream(s3Object.getObjectContent());
         long skipped = inputStream.skip(start);
         if (skipped < start) {
-            // If the skip didn't succeed, it means the start position was beyond the end of the file
-            // In this case, return a 416 (Requested Range Not Satisfiable) error
+
             response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
             return;
         }

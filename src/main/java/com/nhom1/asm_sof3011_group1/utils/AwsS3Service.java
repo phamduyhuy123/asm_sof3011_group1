@@ -13,12 +13,14 @@ public class AwsS3Service {
     public static final String BUCKET_NAME="pdhasmsof3011";
     public static AmazonS3 s3Client(){
         BasicAWSCredentials credentials = new BasicAWSCredentials(ACCESS_KEY, SECRET_KEY);
-        AmazonS3 s3client = AmazonS3ClientBuilder.standard()
+        return AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(Regions.AP_SOUTHEAST_1)
                 .build();
+    }
 
-        return s3client;
+    public static void main(String[] args) {
+        s3Client();
     }
 
 
