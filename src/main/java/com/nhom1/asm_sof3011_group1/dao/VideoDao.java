@@ -8,8 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-public class VideoDao extends DAO<Video,String>{
-    private EntityManager em= JpaUtils.getEntityManger();
+public class VideoDao extends DAO<Video,Long>{
+    private  EntityManager em= JpaUtils.getEntityManger();
     @Override
     public void insert(Video var1) {
 
@@ -21,12 +21,12 @@ public class VideoDao extends DAO<Video,String>{
     }
 
     @Override
-    public void delete(String var1) {
+    public void delete(Long var1) {
 
     }
 
     @Override
-    public Video findById(String var1) {
+    public Video findById(Long var1) {
         Video video=em.find(Video.class,var1);
         return video;
     }

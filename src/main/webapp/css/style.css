@@ -8,34 +8,34 @@
 
 body {
     font-family: 'Roboto', sans-serif;
+    overflow-y: hidden;
 }
-
+#companyName{
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 60px;
     padding: 15px;
+    
+}
+main{
+  height: calc(100vh - 60px);
+  
 }
 
-main {
-    height: calc(100vh - 70px);
-    display: flex;
-    background-color: #f9f9f9;
-}
 
 .side-bar {
-    height: 100%;
-    width: 17%;
-    background-color: white;
-    overflow-y: hidden;
+
+    
+    /* flex-basis: 250px; */
+}
+.main-content{
+   
 }
 
-@media (max-width: 768px) {
-    .side-bar {
-        display: none;
-    }
-}
 
 .left {
     display: flex;
@@ -47,23 +47,9 @@ main {
     cursor: pointer;
 }
 
-.search {
-    display: flex;
-}
 
-.search form {
-    display: flex;
-    border: 1px solid #ddd;
-    height: 45px;
-}
 
-.search input {
-    width: 600px;
-    padding: 10px;
-    border: 0;
-    height: 100%;
-    border-radius: 2px 0 0 2px
-}
+
 
 input:focus {
     outline: none;
@@ -71,7 +57,7 @@ input:focus {
 }
 
 .material-icons {
-    color: rgb(100, 100, 100);
+    color: rgb(255, 255, 255);
     padding: 0 7px;
     cursor: pointer;
 }
@@ -95,12 +81,12 @@ input:focus {
 }
 
 .nav-link:hover {
-    background: #e5e5e5;
+    background: #727171;
     cursor: pointer;
 }
 
 .active {
-    background: #e5e5e5;
+    background: #727171;
 }
 
 hr {
@@ -109,21 +95,19 @@ hr {
     border: none;
 }
 
-.content {
-    background-color: #f9f9f9;
-    width: 100%;
-    height: 100%;
-    padding: 15px 15px;
-    border-top: 1px solid #ddd;
-    overflow-y: scroll;
-}
+
 
 .videos {
     
 }
 
-
-.thumbnail {
+.author img {
+  object-fit: cover;
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+}  
+/* .thumbnail {
     width: 100%;
     height: 170px;
   }
@@ -139,7 +123,7 @@ hr {
     height: 40px;
     width: 40px;
     margin-right: 10px;
-  }
+  } */
   .details {
     display: flex;
   }
@@ -159,19 +143,45 @@ hr {
   .title a,
   span {
     text-decoration: none;
-    color: rgb(96, 96, 96);
+    color: rgb(239, 231, 231);
     font-size: 12px;
+  }
+  .bottom-bar{
+    display: none;
+  }
+  .dropdown-item{
+    color: #e5e5e5;
+
+  }
+  .dropdown-item:hover{
+    background-color: black;
+    color: #e5e5e5;
   }
   @media (max-width: 768px) {
     .side-bar {
       display: none;
     }
-    .search {
+    .bottom-bar{
+        display: flex;
+    }
+    /* .search {
+      display: none;
+    } */
+    #menuHamburger{
       display: none;
     }
 }
-@media (max-width: 900px) {
-    .search input {
-      width: 25rem;
+@media (max-width: 575.20px) {
+    #thumbnailVideoHome{
+
+    }
+  }
+  @media (max-width: 1044px) {
+    .nav-link{
+    
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 25px;
     }
   }
