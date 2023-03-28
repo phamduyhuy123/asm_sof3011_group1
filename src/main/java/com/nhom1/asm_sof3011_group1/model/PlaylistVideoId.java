@@ -11,6 +11,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
+
 @Embeddable
 public class PlaylistVideoId implements Serializable {
 

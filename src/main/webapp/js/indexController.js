@@ -1,5 +1,5 @@
 
-var app = angular.module("myapp", ['ngRoute','infinite-scroll']);
+var app = angular.module("myapp", ['ngRoute']);
 app.config(function ($routeProvider) {
     $routeProvider.when("/videoDetail", {
         templateUrl: "templates/videoDetail.html",
@@ -121,20 +121,35 @@ app.controller("homectrl", function ($scope, $http, $rootScope, $location, $rout
 
 });
 app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routeParams, $location) {
-    $scope.video;
+    $scope.video=[];
     var searchObject=$location.search();
     $scope.videoUrl="";
+    $scope.comments=[];
     var videoId=searchObject.videoId;
     $http.get('videoDetail?videoId=' + videoId).then(function (response) {
         $scope.video = response.data;
         $scope.loadVideo($scope.video.id);
+        $scope.loadComments($scope.video.id);
     }, reason => {
 
     });
-    $http.get('comments?videoId='+videoId)
-    $scope.countRepleParrentComment=function(id){
 
+    $scope.loadComments=function (id){
+        $http.get('api/comments?videoId='+videoId).then(function (response) {
+            $scope.comments=response.data;
+            console.log($scope.comments)
+        })
     }
+    $scope.loadChildrenComments=function (parentId){
+        var data=[];
+        $http.get('api/comment/get/childrenComment?parentId='+parentId).then(function (response){
+            data= response.data;
+            console.log(data);
+            return data;
+        });
+        return data;
+    }
+
     $scope.loadVideo = function(id) {
         $http.get('streamVideo?videoId=' + id).then(function(response) {
             $scope.videoUrl = response.data;

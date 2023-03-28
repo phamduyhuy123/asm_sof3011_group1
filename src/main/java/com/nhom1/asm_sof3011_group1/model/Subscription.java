@@ -16,7 +16,7 @@ public class Subscription {
     @Column(name = "subscription_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscriber_id")
     private User subscriber;
 

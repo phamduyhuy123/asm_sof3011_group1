@@ -32,24 +32,26 @@ import java.io.PrintWriter;
 public class UserServlet extends HttpServlet {
 
     private UserDao userDao;
+    private ObjectMapper mapper;
     @Override
     public void init(ServletConfig config) throws ServletException {
         userDao=new UserDao();
+        mapper = new ObjectMapper();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        String filename = request.getParameter("filename");
-
+        resp.setCharacterEncoding("UTF-8");
         // Set the S3 bucket and key for the image
         String uri =req.getRequestURI();
         Long id = req.getParameter("userId").isEmpty()? null:Long.parseLong(req.getParameter("userId"));
 
-        if(uri.contains("/api/user/loadAvatar")){
+        if(uri.contains("/api/user/loadAvatar") && id!=null){
             getUserAvatarImage(id,resp);
-        }else if(uri.contains("/api/findUser")){
+        }else if(uri.contains("/api/findUser") && id!=null){
             PrintWriter out = resp.getWriter();
-            ObjectMapper mapper = new ObjectMapper();
+
             String jsonData="";
             resp.setContentType("application/json");
             User user=userDao.findById(id);

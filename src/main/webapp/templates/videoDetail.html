@@ -98,29 +98,28 @@
 
             </form>
             <div class="comments p-2 text-white">
-                <div class="d-flex  p-2">
+                <div ng-repeat=" c in comments" class="d-flex  p-2" ng-init="isRepliesCollapsed[$index] = false; childrenComment=[];">
                     <div class="author">
-                        <img class="rounded-circle" src="api/user/loadAvatar?userId={{video.user.id}}" alt="" />
+                        <img class="rounded-circle" src="api/user/loadAvatar?userId={{c.user.id}}" alt="" />
                     </div>
                     <div class="d-flex flex-column ms-1">
                         <div>
                             <!-- tên người bình luận -->
-                            <span class="fw-bolder text-white">{{video.user.username}}</span>
+                            <span class="fw-bolder text-white">{{c.user.username}}</span>
                             <!-- thời điểm bình luận -->
-                            <span class="text-secondary">{{relativeTimeFilter(video.uploadDate)}}</span>
+                            <span class="text-secondary">{{relativeTimeFilter(c.commentDate)}}</span>
                         </div>
                         <div>
                             <!-- bình luận  -->
                             <p class="fw-bold text-white">
-                                adasdasdasd fnewign ewfubewuhfbwef ewfuwebhffffffffffffffff fweuf2384y2738yr23ry
-                                378ry823y 3278ry 32fh872rfg32 78237f3 27f8g28g 45 89y40 3y h
+                                {{c.commentText}}
                             </p>
                         </div>
                         <div>
-                            <button class="btn btn-outline-secondary rounded-circle">
+                            <button class="btn btn-outline-secondary rounded-circle border-0">
                                 <i class="fa-regular fa-thumbs-up"></i>
                             </button>
-                            <button class="btn btn-outline-secondary rounded-circle">
+                            <button class="btn btn-outline-secondary rounded-circle border-0">
                                 <i class="fa-regular fa-thumbs-down"></i>
                             </button>
                             <button class="btn btn-outline-light rounded-4 fs-6">
@@ -128,15 +127,15 @@
                             </button>
                         </div>
                         <div>
-                            <button class="btn btn-outline-light rounded-4 fs-6 " type="button"
-                                data-bs-toggle="collapse" ng-attr-data-bs-target="#repleComment{{$index}}"
-                                aria-expanded="false" aria-controls="collapseExample" ng-click="isCollapsed{{$index}} = !isCollapsed{{$index}}"> 
-                                 1 phản hồi
-                                <i ng-class="{'bi-chevron-down': isCollapsed{{$index}}, 'bi-chevron-up': !isCollapsed{{$index}}}"></i>
+                            <button class="btn btn-outline-light rounded-4 fs-6 border-0 text-primary " type="button"
+                                data-bs-toggle="collapse" data-bs-target="#repleComment{{$index}}"
+                                aria-expanded="false" aria-controls="collapseExample" ng-click="childrenComment= loadChildrenComments(c.commentId); isRepliesCollapsed[$index] = !isRepliesCollapsed[$index];">
+
+                                <i ng-class="{'bi-chevron-down': isRepliesCollapsed[$index], 'bi-chevron-up': !isRepliesCollapsed[$index]}"></i>
                             </button>
-                            <div class="collapse p-2" ng-attr-id="repleComment{{$index}}"
-                                ng-class="{'show': !isCollapsed{{$index}}}">
-                                <div class="d-flex flex-column ms-1">
+                            <div  class="collapse p-2" ng-attr-id="repleComment{{$index}}"
+                                ng-class="{'show': !isRepliesCollapsed[$index]">
+                                <div class="d-flex flex-column ms-1" ng-repeat="cdm in childrenComment">
                                     <div>
                                         <!-- tên người bình luận -->
                                         <span class="fw-bolder text-white">{{video.user.username}}</span>
