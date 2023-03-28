@@ -1,7 +1,13 @@
 package com.nhom1.asm_sof3011_group1.model;
 
-import javax.persistence.*;
+import lombok.*;
 
+import javax.persistence.*;
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "subscription")
 public class Subscription {
@@ -10,7 +16,7 @@ public class Subscription {
     @Column(name = "subscription_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscriber_id")
     private User subscriber;
 

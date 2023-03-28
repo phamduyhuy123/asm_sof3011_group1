@@ -13,19 +13,21 @@ public class UserDao extends DAO<User, Long>  {
     public UserDao(){
 
     }
-    @Override
-    public void insert(User var1) {
 
+
+    @Override
+    public Long insert(User var1) {
+        return null;
     }
 
     @Override
-    public void update(User var1) {
-
+    public Long update(User var1) {
+        return null;
     }
 
     @Override
-    public void delete(Long var1) {
-
+    public Long delete(Long var1) {
+        return null;
     }
 
     @Override

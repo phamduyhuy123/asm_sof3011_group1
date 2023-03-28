@@ -7,7 +7,17 @@ app.config(function ($routeProvider) {
     }).when("/home", {
         templateUrl: "templates/home.html",
         controller: "homectrl"
+    }).when("/login",{
+        templateUrl: "templates/Login.html",
+        controller: "loginctrl"
+    }).when("/register",{
+        templateUrl: "templates/Register.html",
+        controller: "registerctrl"
+    }).when("/editProfile",{
+        templateUrl: "templates/UserDetail.html",
+        controller: "editprofilectrl"
     })
+
         .otherwise({
             redirectTo: "/home"
 
@@ -42,77 +52,121 @@ app.filter('formatDuration', function () {
 });
 app.run(function ($rootScope) {
     $rootScope.$on('$routeChangeStart', function () {
-        // alert("start")
+
     });
     $rootScope.$on('$routeChangeSuccess', function () {
-        // alert("success")
+
     });
     $rootScope.$on('$routeChangeError', function () {
 
         alert("Lỗi");
     });
 })
-app.controller("myctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route,$timeout,$window) {
-    $rootScope.isRouteVideoDetail = function () {
-        return $location.path().includes('videoDetail');
-    };
-    $rootScope.dateNow = new Date();
-    console.log($rootScope.dateNow)
+app.controller("myctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route,$timeout,$window,$anchorScroll) {
+    $anchorScroll();
+    $rootScope.videos=[];
+    $rootScope.isCollapsed=false;
     $rootScope.user;
-    // $http.get('api/findUser').then(function (response) {
-    //     $rootScope.user = response.data;
-    //     console.log($rootScope.user)
-    // })
     $rootScope.relativeTimeFilter = function (dateUpload) {
         return moment(dateUpload).fromNow();
     }
 
-    $scope.getSearchResults = function () {
+    $rootScope.getSearchResults = function () {
         $timeout(function () {
             $http.get('/search', {
-                params: { q: $scope.searchQuery }
+                params: { q: $rootScope.searchQuery }
             }).then(function (response) {
-                $scope.searchResults = response.data;
+                $rootScope.searchResults = response.data;
             });
         }, 1000);
     };
-
-    $scope.currentRoute = $route.current;
-    $scope.checkRouteCurrent=function (){
-        return  currentRoute.$$route.originalPath.includes('videoDetail') && $window.innerWidth <= 768;
-    }
-    $scope.$on('$routeChangeSuccess', function () {
-        $scope.currentRoute = $route.current;
-        
+    $rootScope.$on('$routeChangeSuccess', function(event, current, previous) {
+        $timeout(function() {
+            var element = document.querySelector('.main-content');
+         
+            if (element) {
+                element.scrollTop = 0;
+                
+            }
+        });
+        if ($location.path().includes('videoDetail')) {
+            $rootScope.isCollapsed = true;
+        } else {
+            $rootScope.isCollapsed = false;
+        }
     });
+
+
 
 });
 app.controller("homectrl", function ($scope, $http, $rootScope, $location, $routeParams) {
     $scope.videos = [];
-    $http.get('videos').then(function (response) {
-        $scope.videos = response.data;
-        $rootScope.videos = response.data;
-
-        console.log(response.data)
-    }, reason => {
-
-    });
-
+    
+    
+    $scope.page = 1;
+    $scope.pageSize = 8;
+    $scope.limit=8
+    $scope.loadMore = function() {
+        console.log("loadmore called" +$scope.page)
+        var offset = ($scope.page - 1) * $scope.pageSize;
+        $http.get('videos?offset=' + offset + '&limit=' + $scope.pageSize).then(function(response) {
+            var newItems = response.data;
+            $scope.videos = $scope.videos.concat(newItems);
+            $rootScope.videos=$scope.videos;
+            $scope.limit=$scope.videos.length;
+            $scope.page += 1;
+        });
+    };
+    $scope.loadMore();
 
 });
 app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routeParams, $location) {
-    $scope.video;
+    $scope.video=[];
     var searchObject=$location.search();
-
+    $scope.videoUrl="";
+    $scope.comments=[];
     var videoId=searchObject.videoId;
     $http.get('videoDetail?videoId=' + videoId).then(function (response) {
         $scope.video = response.data;
-
+        $scope.loadVideo($scope.video.id);
+        $scope.loadComments($scope.video.id);
     }, reason => {
 
     });
 
+    $scope.loadComments=function (id){
+        $http.get('api/comments?videoId='+videoId).then(function (response) {
+            $scope.comments=response.data;
+            console.log($scope.comments)
+        })
+    }
+    $scope.loadChildrenComments=function (parentId){
+        var data=[];
+        $http.get('api/comment/get/childrenComment?parentId='+parentId).then(function (response){
+            data= response.data;
+            console.log(data);
+            return data;
+        });
+        return data;
+    }
+
+    $scope.loadVideo = function(id) {
+        $http.get('streamVideo?videoId=' + id).then(function(response) {
+            $scope.videoUrl = response.data;
+        });
+    };
+
 
 });
-
+app.directive("directiveWhenScrolled", function() {
+    return function(scope, elm, attr) {
+      var raw = elm[0];
+  
+      elm.bind('scroll', function() {
+        if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+          scope.$apply(attr.directiveWhenScrolled);
+        }
+      });
+    };
+  });
 

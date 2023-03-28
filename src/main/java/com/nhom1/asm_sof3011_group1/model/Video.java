@@ -37,7 +37,7 @@ public class Video {
     @Column(name = "video_url")
     private String videoUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

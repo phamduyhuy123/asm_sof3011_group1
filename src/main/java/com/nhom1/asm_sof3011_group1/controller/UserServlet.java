@@ -32,27 +32,27 @@ import java.io.PrintWriter;
 public class UserServlet extends HttpServlet {
 
     private UserDao userDao;
+    private ObjectMapper mapper;
     @Override
     public void init(ServletConfig config) throws ServletException {
         userDao=new UserDao();
+        mapper = new ObjectMapper();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        String filename = request.getParameter("filename");
-
+        resp.setCharacterEncoding("UTF-8");
         // Set the S3 bucket and key for the image
         String uri =req.getRequestURI();
         Long id = req.getParameter("userId").isEmpty()? null:Long.parseLong(req.getParameter("userId"));
 
-        if(uri.contains("/api/user/loadAvatar")){
-
+        if(uri.contains("/api/user/loadAvatar") && id!=null){
             getUserAvatarImage(id,resp);
-        }else if(uri.contains("/api/findUser")){
+        }else if(uri.contains("/api/findUser") && id!=null){
             PrintWriter out = resp.getWriter();
-            ObjectMapper mapper = new ObjectMapper();
-            String jsonData="";
 
+            String jsonData="";
             resp.setContentType("application/json");
             User user=userDao.findById(id);
             jsonData=mapper.writeValueAsString(user);
@@ -60,27 +60,18 @@ public class UserServlet extends HttpServlet {
             out.print(jsonData);
             out.close();
 
-            return;
         }
-        System.out.println("không tìm tuhay61");
+
     }
     private void getUserAvatarImage(Long id,HttpServletResponse resp) throws IOException {
-
             User user= userDao.findById(id);
-            System.out.println(user.toString());
             String bucketName = AwsS3Service.BUCKET_NAME;
-            String key = "images/"+user.getAvatarUrl();
-            // Create an S3 client
+            String key = "avatars/"+user.getAvatarUrl();
             AmazonS3 s3client = AwsS3Service.s3Client();
-
-            // Get the S3 object for the video file
             S3Object s3Object = s3client.getObject(new GetObjectRequest(bucketName, key));
-
-            // Get the content of the image object as an input stream
             InputStream inputStream = s3Object.getObjectContent();
             BufferedImage image = ImageIO.read(inputStream);
-            // Set the content type of the response to image/jpeg
-            resp.setContentType("image/jpeg"); // set content type of response
+            resp.setContentType("image/jpeg");
             OutputStream outputStream = resp.getOutputStream();
             ImageIO.write(image, "jpeg", outputStream);
             outputStream.close();

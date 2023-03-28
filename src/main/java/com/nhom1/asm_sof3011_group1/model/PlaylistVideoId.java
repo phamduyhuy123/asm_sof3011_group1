@@ -11,8 +11,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
-@Embeddable
+@EqualsAndHashCode
 
+@Embeddable
 public class PlaylistVideoId implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -1,8 +1,14 @@
 package com.nhom1.asm_sof3011_group1.model;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table
 public class ViewHistory {

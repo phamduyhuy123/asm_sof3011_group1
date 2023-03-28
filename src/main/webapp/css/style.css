@@ -97,9 +97,6 @@ hr {
 
 
 
-.videos {
-    
-}
 
 .author img {
   object-fit: cover;
@@ -156,6 +153,19 @@ hr {
   .dropdown-item:hover{
     background-color: black;
     color: #e5e5e5;
+  }
+  .reply-rate{
+    position: relative;
+    display: flex;
+    align-items: center;
+    /* padding: var(--bs-accordion-btn-padding-y) var(--bs-accordion-btn-padding-x); */
+    font-size: 1rem;
+    /* color: var(--bs-accordion-btn-color); */
+    text-align: center;
+    /* background-color: var(--bs-accordion-btn-bg); */
+    border: 0;
+    overflow-anchor: none;
+    transition: var(--bs-accordion-transition);
   }
   @media (max-width: 768px) {
     .side-bar {

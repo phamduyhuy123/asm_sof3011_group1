@@ -1,12 +1,16 @@
 package com.nhom1.asm_sof3011_group1.controller;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhom1.asm_sof3011_group1.dao.VideoDao;
 import com.nhom1.asm_sof3011_group1.model.Video;
 import com.nhom1.asm_sof3011_group1.utils.AwsS3Service;
+import org.apache.commons.io.FilenameUtils;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 
@@ -18,10 +22,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.URL;
+import java.util.Date;
 import java.util.List;
 
 @WebServlet( name = "videos", value = {"/videos","/videoDetail","/video/poster"})
@@ -30,23 +33,24 @@ public class VideosServlet extends HttpServlet {
     private ObjectMapper mapper;
     @Override
     public void init(ServletConfig config) throws ServletException {
-
         videoDao=new VideoDao();
         mapper = new ObjectMapper();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        resp.setCharacterEncoding("UTF-8");
 
         String jsonData="";
         Long id = req.getParameter("videoId")==null ? null:Long.parseLong(req.getParameter("videoId"));
         if(req.getRequestURI().contains("/videos")){
+            String limit =req.getParameter("limit");
+            String offSet=req.getParameter("offset");
             PrintWriter out = resp.getWriter();
             resp.setContentType("application/json");
-            List<Video> videos=videoDao.findAll();
+            List<Video> videos=videoDao.findAllPagination(limit,offSet);
             jsonData=mapper.writeValueAsString(videos);
-
+            System.out.println(jsonData);
             out.print(jsonData);
             out.close();
 
@@ -62,32 +66,67 @@ public class VideosServlet extends HttpServlet {
         } else if(req.getRequestURI().contains("/video/poster")){
 
             Video video=videoDao.findById(id);
-
             String bucketName = AwsS3Service.BUCKET_NAME;
             String key = "video/"+video.getVideoUrl();
-
-            // Create an S3 client
             AmazonS3 s3client = AwsS3Service.s3Client();
-
-            // Get the S3 object for the video file
             S3Object s3Object = s3client.getObject(new GetObjectRequest(bucketName, key));
-            InputStream inputStream = s3Object.getObjectContent();
+            if(video.getThumbnailUrl()==null ||video.getThumbnailUrl().isEmpty()){
+                InputStream inputStream = s3Object.getObjectContent();
+                FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(inputStream);
+                grabber.start();
+                Java2DFrameConverter converter = new Java2DFrameConverter();
+                BufferedImage image = converter.convert(grabber.grabImage());
+                grabber.stop();
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                ImageIO.write(image, "jpeg", outputStream);
+                byte[] thumbnailBytes = outputStream.toByteArray();
+                String thumbnailKey = "thumbnails/" +FilenameUtils.removeExtension(video.getVideoUrl()) + ".jpg";
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentLength(thumbnailBytes.length);
+                s3client.putObject(AwsS3Service.BUCKET_NAME, thumbnailKey, new ByteArrayInputStream(thumbnailBytes), metadata);
+                inputStream.close();
+                outputStream.close();
+                video.setThumbnailUrl(FilenameUtils.removeExtension(video.getVideoUrl()) + ".jpg");
+                videoDao.update(video);
+                S3Object s3object = s3client.getObject(new GetObjectRequest(bucketName, thumbnailKey));
+                InputStream imageFromAws = s3object.getObjectContent();
 
-            // Create a new FFmpegFrameGrabber for the video file input stream
-            FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(inputStream);
+                resp.setContentType("image/jpeg"); // set content type of response
+                OutputStream respOutputStream = resp.getOutputStream();
 
-            // Start the grabber to get the video frames
-            grabber.start();
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = imageFromAws .read(buffer)) != -1) {
+                    respOutputStream.write(buffer, 0, bytesRead);
+                }
 
-            // Get the first frame of the video and save it as an image
-            Java2DFrameConverter converter = new Java2DFrameConverter();
-            BufferedImage image = converter.convert(grabber.grabImage());
-            grabber.stop();
+                inputStream.close();
+                outputStream.flush();
+                outputStream.close();
 
-            resp.setContentType("image/jpeg"); // set content type of response
-            OutputStream outputStream = resp.getOutputStream();
-            ImageIO.write(image, "jpeg", outputStream);
-            outputStream.close();
+            }else {
+
+                String thumbnailKey = "thumbnails/" + video.getThumbnailUrl();
+                S3Object s3object = s3client.getObject(new GetObjectRequest(bucketName, thumbnailKey));
+                InputStream inputStream = s3object.getObjectContent();
+
+                resp.setContentType("image/jpeg"); // set content type of response
+                OutputStream outputStream = resp.getOutputStream();
+
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+
+                inputStream.close();
+                outputStream.flush();
+                outputStream.close();
+
+
+            }
+
+//
         }
 
 
