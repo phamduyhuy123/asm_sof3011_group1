@@ -23,6 +23,7 @@ public class Channel {
     private String description;
 
     @Column(name = "creation_date")
+    @Temporal(TemporalType.DATE)
     private Date creationDate;
 
     @ManyToOne

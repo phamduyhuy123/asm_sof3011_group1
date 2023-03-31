@@ -23,6 +23,7 @@ public class Playlist {
     private String description;
 
     @Column(name = "created_date")
+    @Temporal(TemporalType.DATE)
     private Date createdDate;
 
     @ManyToOne
