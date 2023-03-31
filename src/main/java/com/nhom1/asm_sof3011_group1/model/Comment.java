@@ -14,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "comment")
 public class Comment {

@@ -42,6 +42,7 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        String filename = request.getParameter("filename");
+        req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         // Set the S3 bucket and key for the image
         String uri =req.getRequestURI();

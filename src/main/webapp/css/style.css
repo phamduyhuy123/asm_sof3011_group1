@@ -21,6 +21,7 @@ body {
     padding: 15px;
     
 }
+
 main{
   height: calc(100vh - 60px);
   
@@ -32,9 +33,7 @@ main{
     
     /* flex-basis: 250px; */
 }
-.main-content{
-   
-}
+
 
 
 .left {
@@ -185,6 +184,8 @@ hr {
     #thumbnailVideoHome{
 
     }
+    
+  
   }
   @media (max-width: 1044px) {
     .nav-link{
