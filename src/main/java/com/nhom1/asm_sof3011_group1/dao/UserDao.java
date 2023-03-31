@@ -13,7 +13,9 @@ public class UserDao extends DAO<User, Long>  {
     public UserDao(){
 
     }
-
+    public static void main(String[] args) {
+		new UserDao().findAll();
+	}
 
     @Override
     public Long insert(User var1) {
@@ -43,6 +45,7 @@ public class UserDao extends DAO<User, Long>  {
     public List<User> findAll() {
         String jpql="SELECT v FROM User v";
         TypedQuery<User> query=em.createQuery(jpql,User.class);
+        System.out.print(query.getResultList().toString());
         return query.getResultList();
     }
 

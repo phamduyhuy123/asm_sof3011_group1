@@ -15,8 +15,12 @@
 <body> -->
 <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-1 p-4">
     <div class="col col-lg-9 col-md-9 col-sm-12 col-12">
-        <video style="height: 450px;" class="w-100" ng-src="{{videoUrl}}" controls></video>
-        <div class="w-100 text-white bg-dark-subtle rounded-4 p-3">
+        <video autoplay id="plyr-video" style=" --plyr-color-main: red;
+         --plyr-captions-text-color: #2e323c; --plyr-badge-text-color:#2e323c; " class="w-100" controls>
+            <source ng-src="{{videoUrl}}" type="video/mp4">
+            <source src="" type="video/webm">
+        </video>
+        <div class="w-100 text-white bg-dark-subtle rounded-4 p-3 mt-3">
             <h2 class="fw-bold">
                 {{video.title}}
             </h2>
@@ -33,13 +37,13 @@
                 </div>
                 <div class="ms-auto">
                     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="isLike" id="likeBtn" autocomplete="off">
+                        <input ng-model="checkbox1" ng-click="onCheckboxClick(1)" type="checkbox" class="btn-check" name="isLike" id="likeBtn" autocomplete="off">
                         <label class="btn btn-outline-dark rounded-start-pill" for="likeBtn"><i
                                 class="fa-regular fa-thumbs-up"></i>
                             <!-- lượt like -->
                             <span></span>
                         </label>
-                        <input type="radio" class="btn-check" name="isLike" id="disLikeBtn" autocomplete="off">
+                        <input ng-model="checkbox2" ng-click="onCheckboxClick(2)" type="checkbox" class="btn-check" name="isLike" id="disLikeBtn" autocomplete="off">
                         <label class="btn btn-outline-dark" for="disLikeBtn"><i class="fa-regular fa-thumbs-down"></i>
                             <!-- dislike -->
                             <span></span>
@@ -86,23 +90,27 @@
                 </div>
                 <div class="w-100">
                     <div class="form-floating ms-1 w-100">
-                        <textarea class="form-control w-100 text-black" placeholder="Leave a comment here"
-                            id="floatingTextarea2" style="height: 100px"></textarea>
+                        <textarea ng-model="userCommentValue" class="form-control w-100 text-black"
+                            placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px">
+
+                        </textarea>
                         <label class="text-black" for="floatingTextarea2">Comments</label>
                     </div>
                     <div class="border-top mt-2 pt-md-2 w-100 text-end">
-                        <button type="button" class="btn btn-light">Cancel</button>
-                        <button type="button" class="btn btn-light" disabled>Comment</button>
+                        <button type="button" class="btn btn-light" ng-click="userCommentValue=null">Cancel</button>
+                        <button ng-class="{'disabled': !userCommentValue}" type="button"
+                            ng-click="sendCommentToVideo(userCommentValue,video.id,video.user.id); userCommentValue=null;"
+                            class="btn btn-light ">Comment</button>
                     </div>
                 </div>
 
             </form>
             <div class="comments p-2 text-white">
-                <div ng-repeat=" c in comments" class="d-flex  p-2" ng-init="isRepliesCollapsed[$index] = false; childrenComment=[];">
+                <div ng-repeat=" c in comments" class="d-flex  p-2" ng-init="isRepliesCollapsed[$index] = false; ">
                     <div class="author">
                         <img class="rounded-circle" src="api/user/loadAvatar?userId={{c.user.id}}" alt="" />
                     </div>
-                    <div class="d-flex flex-column ms-1">
+                    <div class="d-flex flex-column ms-1 w-100">
                         <div>
                             <!-- tên người bình luận -->
                             <span class="fw-bolder text-white">{{c.user.username}}</span>
@@ -122,44 +130,94 @@
                             <button class="btn btn-outline-secondary rounded-circle border-0">
                                 <i class="fa-regular fa-thumbs-down"></i>
                             </button>
-                            <button class="btn btn-outline-light rounded-4 fs-6">
+                            <button class="btn btn-outline-light rounded-4 fs-6 border-0" data-bs-toggle="collapse"
+                                data-bs-target="#collapseParentComment{{$index}}" aria-expanded="false"
+                                aria-controls="#collapseParentComment{{$index}}">
                                 Phản hồi
                             </button>
                         </div>
-                        <div>
+                        <form method="post" class="w-100 collapse mt-2" id="collapseParentComment{{$index}}">
+                            <div class="w-100">
+                                <div class="form-floating ms-1 w-100">
+                                    <textarea ng-model="userCommentValue" class="form-control w-100 text-black"
+                                        placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px">
+
+                                    </textarea>
+                                    <label class="text-black" for="floatingTextarea2">Comments</label>
+                                </div>
+                                <div class="border-top mt-2 pt-md-2 w-100 text-end">
+                                    <button type="button" class="btn btn-light"
+                                        ng-click="userCommentValue=null">Cancel</button>
+                                    <button ng-class="{'disabled': !userCommentValue}" type="button"
+                                        ng-click="sendChildrenCommentToVideo(userCommentValue,video.id,video.user.id,c.commentId); userCommentValue=null;"
+                                        class="btn btn-light ">Comment</button>
+                                </div>
+                            </div>
+
+                        </form>
+                        <div ng-if="loadChildrenComments(c.commentId).length >0">
                             <button class="btn btn-outline-light rounded-4 fs-6 border-0 text-primary " type="button"
-                                data-bs-toggle="collapse" data-bs-target="#repleComment{{$index}}"
-                                aria-expanded="false" aria-controls="collapseExample" ng-click="childrenComment= loadChildrenComments(c.commentId); isRepliesCollapsed[$index] = !isRepliesCollapsed[$index];">
-
-                                <i ng-class="{'bi-chevron-down': isRepliesCollapsed[$index], 'bi-chevron-up': !isRepliesCollapsed[$index]}"></i>
+                                data-bs-toggle="collapse" data-bs-target="#repleComment{{$index}}" aria-expanded="false"
+                                aria-controls="#repleComment{{$index}}"
+                                ng-click="isRepliesCollapsed[$index] = !isRepliesCollapsed[$index];">
+                                <i
+                                    ng-class="{'bi-chevron-down': isRepliesCollapsed[$index], 'bi-chevron-up': !isRepliesCollapsed[$index]}"></i>
+                                <span class="text-primary fs-6"> {{loadChildrenComments(c.commentId).length}} phản
+                                    hồi</span>
                             </button>
-                            <div  class="collapse p-2" ng-attr-id="repleComment{{$index}}"
-                                ng-class="{'show': !isRepliesCollapsed[$index]">
-                                <div class="d-flex flex-column ms-1" ng-repeat="cdm in childrenComment">
-                                    <div>
-                                        <!-- tên người bình luận -->
-                                        <span class="fw-bolder text-white">{{video.user.username}}</span>
-                                        <!-- thời điểm bình luận -->
-                                        <span class="text-secondary">{{relativeTimeFilter(video.uploadDate)}}</span>
+                            <div class="collapse p-2" ng-attr-id="repleComment[$index]"
+                                ng-class="{'show': isRepliesCollapsed[$index]}">
+                                <div class="d-flex   ms-1" ng-repeat="cdm in loadChildrenComments(c.commentId)">
+                                    <div class="author">
+                                        <img class="rounded-circle" src="api/user/loadAvatar?userId={{cdm.user.id}}"
+                                            alt="" />
                                     </div>
-                                    <div>
-                                        <!-- bình luận  -->
-                                        <p class="fw-bold text-white">
-                                            adasdasdasd fnewign ewfubewuhfbwef ewfuwebhffffffffffffffff
-                                            fweuf2384y2738yr23ry
-                                            378ry823y 3278ry 32fh872rfg32 78237f3 27f8g28g 45 89y40 3y h
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-outline-secondary rounded-circle">
-                                            <i class="fa-regular fa-thumbs-up"></i>
-                                        </button>
-                                        <button class="btn btn-outline-secondary rounded-circle">
-                                            <i class="fa-regular fa-thumbs-down"></i>
-                                        </button>
-                                        <button class="btn btn-outline-light rounded-4 fs-6">
+                                    <div class="d-flex flex-column ms-1 w-100">
+                                        <div class="">
+                                            <!-- tên người bình luận -->
+                                            <span class="fw-bolder text-white">{{cdm.user.username}}</span>
+                                            <!-- thời điểm bình luận -->
+                                            <span class="text-secondary">{{relativeTimeFilter(cdm.commentDate)}}</span>
 
-                                        </button>
+                                        </div>
+                                        <div>
+                                            <!-- bình luận  -->
+                                            <p class="fw-bold text-white">
+                                                {{cdm.commentText}}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-outline-secondary rounded-circle border-0">
+                                                <i class="fa-regular fa-thumbs-up"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary rounded-circle border-0">
+                                                <i class="fa-regular fa-thumbs-down"></i>
+                                            </button>
+                                            <button class="btn btn-outline-light rounded-4 fs-6 border-0" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseChildrenComment{{$index}}" aria-expanded="false"
+                                            aria-controls="#collapseChildrenComment{{$index}}">
+                                                Phản hồi
+                                            </button>
+                                        </div>
+                                        <form method="post" class="w-100 collapse mt-2" id="collapseChildrenComment{{$index}}">
+                                            <div class="w-100">
+                                                <div class="form-floating ms-1 w-100">
+                                                    <textarea ng-model="userCommentValue" class="form-control w-100 text-black"
+                                                        placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px">
+                
+                                                    </textarea>
+                                                    <label class="text-black" for="floatingTextarea2">Comments</label>
+                                                </div>
+                                                <div class="border-top mt-2 pt-md-2 w-100 text-end">
+                                                    <button type="button" class="btn btn-light"
+                                                        ng-click="userCommentValue=null">Cancel</button>
+                                                    <button ng-class="{'disabled': !userCommentValue}" type="button"
+                                                        ng-click="sendCommentToVideo(userCommentValue,video.id,video.user.id); userCommentValue=null;"
+                                                        class="btn btn-light ">Comment</button>
+                                                </div>
+                                            </div>
+                
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -171,27 +229,38 @@
         </div>
     </div>
     <div class="d-flex flex-column col col-lg-3 col-md-3 col-sm-12 col-12 mt-3 mt-lg-0 mt-md-0 mt-sm-0 ">
-        <div ng-repeat="v in videos track by $index" class=" bg-black shadow p-lg-3 p-md-3 p-sm-4 p-5">
-            <a href="#!videoDetail?videoId={{v.id}}" class="card bg-black">
-                <img id="th" class="card-img-top" src="video/poster?videoId={{v.id}}" alt="" height="170px">
-                <div class="card-body details d-flex">
-                    <div class="author">
-                        <img class="rounded-circle" src="api/user/loadAvatar?userId={{v.user.id}}" alt="" />
-                    </div>
-                    <div class="title text-white">
-                        <h3 class="text-white fw-bold">
-                            {{v.title}}
-                        </h3>
-                        <a href="">
-                            {{v.user.username}}
-                        </a>
-                        <span>{{v.views | viewNumber}} lượt xem</span>
-                        <span>{{relativeTimeFilter(v.uploadDate)}}</span>
-                    </div>
-                </div>
-            </a>
-        </div>
+        <!--        <div ng-repeat="v in videos" class=" bg-black shadow p-lg-3 p-md-3 p-sm-4 p-5">-->
+        <!--            <a href="#!videoDetail?videoId={{v.id}}" class="card bg-black">-->
+        <!--                <img id="th" class="card-img-top" src="video/poster?videoId={{v.id}}" alt="" height="170px">-->
+        <!--                <div class="card-body details d-flex">-->
+        <!--                    <div class="author">-->
+        <!--                        <img class="rounded-circle" src="api/user/loadAvatar?userId={{v.user.id}}" alt="" />-->
+        <!--                    </div>-->
+        <!--                    <div class="title text-white">-->
+        <!--                        <h3 class="text-white fw-bold">-->
+        <!--                            {{v.title}}-->
+        <!--                        </h3>-->
+        <!--                        <a href="">-->
+        <!--                            {{v.user.username}}-->
+        <!--                        </a>-->
+        <!--                        <span>{{v.views | viewNumber}} lượt xem</span>-->
+        <!--                        <span>{{relativeTimeFilter(v.uploadDate)}}</span>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </a>-->
+        <!--        </div>-->
     </div>
 </div>
+<style>
+    .plyr {
+        height: 450px;
+    }
+
+    .plyr__control span {
+
+        color: rgb(62, 60, 60);
+
+    }
+</style>
 <!-- </body>
 </html> -->

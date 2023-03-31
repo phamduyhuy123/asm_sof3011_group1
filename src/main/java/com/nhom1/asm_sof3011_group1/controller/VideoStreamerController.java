@@ -21,24 +21,24 @@ import java.util.Date;
 @WebServlet("/streamVideo")
 public class VideoStreamerController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         Long id =  Long.parseLong(request.getParameter("videoId"));
         VideoDao videoDao=new VideoDao();
         Video video= videoDao.findById(id);
         String fileName=video.getVideoUrl();
-        // Get the S3 bucket and key for the video file
+
         String bucketName = AwsS3Service.BUCKET_NAME;
         String key = "video/"+fileName;
-        Date expiration = new Date();
-        long expTimeMillis = expiration.getTime();
-        expTimeMillis += 1000 * 60 * 60; // 1 hour
-        expiration.setTime(expTimeMillis);
+//        Date expiration = new Date();
+//        long expTimeMillis = expiration.getTime();
+//        expTimeMillis += 1000 * 60 * 60; // 1 hour
+//        expiration.setTime(expTimeMillis);
         GeneratePresignedUrlRequest generatePresignedUrlRequest =
                 new GeneratePresignedUrlRequest(bucketName, key)
-                        .withMethod(HttpMethod.GET)
-                        .withExpiration(expiration);
+                        .withMethod(HttpMethod.GET);
         AmazonS3 s3client = AwsS3Service.s3Client();
         URL url = s3client.generatePresignedUrl(generatePresignedUrlRequest);
-
 
         response.setContentType("text/plain");
         response.getWriter().write(url.toString());

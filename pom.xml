@@ -135,9 +135,12 @@
                 <version>1.8.3</version>
                 <configuration>
                     <container>
-                        <containerId>tomcat9x</containerId>
-                        <type>embedded</type>
-                    </container>
+        <containerId>tomcat9x</containerId>
+        <type>embedded</type>
+        <systemProperties>
+            <cargo.tomcat.connector.http.port>8081</cargo.tomcat.connector.http.port>
+        </systemProperties>
+    </container>
                     <deployables>
                         <deployable>
                             <type>war</type>
