@@ -28,6 +28,7 @@ public class User {
     private String avatarUrl;
 
     @Column(name = "join_date")
+    @Temporal(TemporalType.DATE)
     private Date joinDate;
 
     // getters and setters

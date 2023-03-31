@@ -25,6 +25,7 @@ public class Video {
     private String description;
 
     @Column(name = "upload_date")
+    @Temporal(TemporalType.DATE)
     private Date uploadDate;
 
     private Long views;
