@@ -29,11 +29,15 @@ import java.util.stream.Collectors;
 public class CommentServlet extends HttpServlet {
     private CommentDao commentDao;
     private ObjectMapper mapper;
+    private UserDao userDao;
+    private VideoDao videoDao;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         commentDao=new CommentDao();
         mapper = new ObjectMapper();
+        userDao=new UserDao();
+        videoDao=new VideoDao();
     }
 
     @Override
@@ -89,8 +93,7 @@ public class CommentServlet extends HttpServlet {
             if(videoId!=null&&userId!=null){
                 //parent comment
                 if(commentId==null){
-                    UserDao userDao=new UserDao();
-                    VideoDao videoDao=new VideoDao();
+
                     Long returnId= commentDao.insert(
                             Comment.builder()
                                     .commentDate(new Date())
@@ -108,7 +111,25 @@ public class CommentServlet extends HttpServlet {
                     out.close();
                 }
                 //children comment
-                else if(commentId!=null){
+                else {
+                    System.out.println(commentId);
+                    System.out.println(value);
+                    Comment comment= Comment.builder()
+                            .commentText(value)
+                            .user(userDao.findById(userId))
+                            .video(videoDao.findById(videoId))
+                            .parentComment(commentDao.findById(commentId))
+                            .commentDate(new Date())
+                            .build();
+                    Long returnId= commentDao.insert(comment);
+                    PrintWriter out = resp.getWriter();
+                    String jsonData="";
+                    resp.setContentType("application/json");
+                    jsonData=mapper.writeValueAsString(commentDao.findById(returnId));
+                    out.print(jsonData);
+                    System.out.println(jsonData);
+                    out.close();
+
                 }
             }
         }

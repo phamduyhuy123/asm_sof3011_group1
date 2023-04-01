@@ -64,8 +64,6 @@ public class VideosServlet extends HttpServlet {
             String bucketName = AwsS3Service.BUCKET_NAME;
             String key = "video/"+video.getVideoUrl();
             AmazonS3 s3client = AwsS3Service.s3Client();
-
-
             if(video.getThumbnailUrl()==null ||video.getThumbnailUrl().isEmpty()){
                 S3Object s3Object = s3client.getObject(new GetObjectRequest(bucketName, key));
                 InputStream inputStream = s3Object.getObjectContent();
@@ -87,48 +85,33 @@ public class VideosServlet extends HttpServlet {
                 videoDao.update(video);
                 s3Object = s3client.getObject(new GetObjectRequest(bucketName, thumbnailKey));
                 InputStream imageFromAws = s3Object.getObjectContent();
-
                 resp.setContentType("image/jpeg"); // set content type of response
                 OutputStream respOutputStream = resp.getOutputStream();
-
                 byte[] buffer = new byte[4096];
                 int bytesRead;
                 while ((bytesRead = imageFromAws .read(buffer)) != -1) {
                     respOutputStream.write(buffer, 0, bytesRead);
                 }
-
                 inputStream.close();
                 outputStream.flush();
                 outputStream.close();
-
             }else {
-
                 String thumbnailKey = "thumbnails/" +video.getId()+"_" + video.getThumbnailUrl();
                 S3Object s3object = s3client.getObject(new GetObjectRequest(bucketName, thumbnailKey));
                 InputStream inputStream = s3object.getObjectContent();
-
                 resp.setContentType("image/jpeg"); // set content type of response
                 OutputStream outputStream = resp.getOutputStream();
-
                 byte[] buffer = new byte[4096];
                 int bytesRead;
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, bytesRead);
                 }
-
                 inputStream.close();
                 outputStream.flush();
                 outputStream.close();
-
-
             }
-
-//
         }
-
-
     }
-
     @Override
     public void destroy() {
 

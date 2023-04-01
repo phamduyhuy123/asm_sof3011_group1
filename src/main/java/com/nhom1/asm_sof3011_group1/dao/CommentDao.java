@@ -45,6 +45,7 @@ public class CommentDao extends DAO<Comment,Long>{
         String jpql="SELECT c FROM Comment c  WHERE c.video.id=:videoId and c.parentComment is null ";
         TypedQuery<Comment> query=em.createQuery(jpql,Comment.class);
         query.setParameter("videoId",videoId);
+
         return query.getResultList();
     }
     public List<Comment> findChildrenCommentByParentId(Long parentId){

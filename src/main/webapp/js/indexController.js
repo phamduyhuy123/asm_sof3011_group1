@@ -96,16 +96,13 @@ app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routePar
             if($scope.playCount==1){
                
             }
-
         });
-
     };
     $scope.loadVideo = function(id) {
         $http.get('streamVideo?videoId=' + id).then(function(response) {
             $scope.videoUrl = response.data;
             $scope.initPlayer();
         });
-
     };
 
     $scope.sendCommentToVideo=function (value,videoId,userId) {
@@ -116,8 +113,10 @@ app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routePar
 
     };
     $scope.sendChildrenCommentToVideo=function (value,videoId,userId,commentId) {
-        $http.post('api/comment/post/commentVideo?videoId='+videoId+'&userId='+userId+'parentId='+commentId, value).then(function (response){
-            $scope.comments.unshift(response.data);
+        $http.post('api/comment/post/commentVideo?videoId='+videoId+'&userId='+userId+'&parentId='+commentId, value).then(function (response){
+            console.log($scope.commentsData[commentId])
+            $scope.commentsData[commentId].push(response.data);
+            console.log($scope.commentsData[commentId])
 
         });
     };

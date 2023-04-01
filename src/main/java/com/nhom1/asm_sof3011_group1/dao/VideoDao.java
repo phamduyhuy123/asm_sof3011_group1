@@ -50,7 +50,7 @@ public class VideoDao extends DAO<Video,Long>{
         return list;
     }
     public List<Video> findAllPagination(String limit,String offSet){
-        String jpql = "SELECT t FROM Video t ORDER BY t.id ASC";
+        String jpql = "SELECT t FROM Video t ";
         TypedQuery<Video> query = em.createQuery(jpql, Video.class);
         int limitInt = Integer.parseInt(limit);
         int offsetInt = Integer.parseInt(offSet);
