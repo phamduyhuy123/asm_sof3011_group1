@@ -37,16 +37,16 @@
                 </div>
                 <div class="ms-auto">
                     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                        <input ng-model="checkbox1" ng-click="onCheckboxClick(1)" type="checkbox" class="btn-check" name="isLike" id="likeBtn" autocomplete="off">
+                        <input ng-model="checkbox1" ng-click="likeVideo(1)" type="checkbox" class="btn-check" name="isLike" id="likeBtn" autocomplete="off">
                         <label class="btn btn-outline-dark rounded-start-pill" for="likeBtn"><i
                                 class="fa-regular fa-thumbs-up"></i>
                             <!-- lượt like -->
-                            <span></span>
+                            {{likeCount(true)}}
                         </label>
-                        <input ng-model="checkbox2" ng-click="onCheckboxClick(2)" type="checkbox" class="btn-check" name="isLike" id="disLikeBtn" autocomplete="off">
+                        <input ng-model="checkbox2" ng-click="likeVideo(2)" type="checkbox" class="btn-check" name="isLike" id="disLikeBtn" autocomplete="off">
                         <label class="btn btn-outline-dark" for="disLikeBtn"><i class="fa-regular fa-thumbs-down"></i>
                             <!-- dislike -->
-                            <span></span>
+                            {{likeCount(false)}}
                         </label>
                     </div>
                     <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#shareModal">
@@ -86,7 +86,7 @@
             <!-- user bình luận -->
             <form method="post" class="d-flex w-100">
                 <div class="author">
-                    <img class="rounded-circle" src="api/user/loadAvatar?userId={{video.user.id}}" alt="" />
+                    <img class="rounded-circle" src="api/user/loadAvatar?userId={{user.id}}" alt="" />
                 </div>
                 <div class="w-100">
                     <div class="form-floating ms-1 w-100">
@@ -99,7 +99,7 @@
                     <div class="border-top mt-2 pt-md-2 w-100 text-end">
                         <button type="button" class="btn btn-light" ng-click="userCommentValue=null">Cancel</button>
                         <button ng-class="{'disabled': !userCommentValue}" type="button"
-                            ng-click="sendCommentToVideo(userCommentValue,video.id,video.user.id); userCommentValue=null;"
+                            ng-click="sendCommentToVideo(userCommentValue,video.id,user.id); userCommentValue=null;"
                             class="btn btn-light ">Comment</button>
                     </div>
                 </div>
@@ -149,7 +149,7 @@
                                     <button type="button" class="btn btn-light"
                                         ng-click="userCommentValue=null">Cancel</button>
                                     <button ng-class="{'disabled': !userCommentValue}" type="button"
-                                        ng-click="sendChildrenCommentToVideo(userCommentValue,video.id,video.user.id,c.commentId); userCommentValue=null;"
+                                        ng-click="sendChildrenCommentToVideo(userCommentValue,video.id,user.id,c.commentId); userCommentValue=null;"
                                         class="btn btn-light ">Comment</button>
                                 </div>
                             </div>
@@ -217,7 +217,7 @@
                                                     <button type="button" class="btn btn-light"
                                                             ng-click="userCommentValue=null">Cancel</button>
                                                     <button ng-class="{'disabled': !userCommentValue}" type="button"
-                                                            ng-click="sendChildrenCommentToVideo(userCommentValue,video.id,video.user.id,c.commentId); userCommentValue=null;"
+                                                            ng-click="sendChildrenCommentToVideo(userCommentValue,video.id,user.id,c.commentId); userCommentValue=null;"
                                                             class="btn btn-light ">Comment</button>
                                                 </div>
                                             </div>

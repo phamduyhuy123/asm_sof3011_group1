@@ -1,28 +1,31 @@
-
 var app = angular.module("myapp", ['ngRoute']);
 
-app.controller("myctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route,$timeout,$window,$anchorScroll) {
+app.controller("myctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
     $anchorScroll();
-    $rootScope.videos=[];
-    $rootScope.isCollapsed=false;
+    $rootScope.videos = [];
+    $rootScope.isCollapsed = false;
     $rootScope.user;
     $rootScope.relativeTimeFilter = function (dateUpload) {
         return moment(dateUpload).fromNow();
     }
+    $http.get('api/findUser?userId=' + 2).then(function (response) {
+        $rootScope.user = response.data;
+        console.log($rootScope.user)
+    });
     $rootScope.getSearchResults = function () {
         $timeout(function () {
             $http.get('/search', {
-                params: { q: $rootScope.searchQuery }
+                params: {q: $rootScope.searchQuery}
             }).then(function (response) {
                 $rootScope.searchResults = response.data;
             });
         }, 1000);
     };
-    $rootScope.$on('$routeChangeSuccess', function(event, current, previous) {
-        $timeout(function() {
+    $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+        $timeout(function () {
             var element = document.querySelector('.main-content');
             if (element) {
-                element.scrollTop = 0;    
+                element.scrollTop = 0;
             }
         });
         if ($location.path().includes('videoDetail')) {
@@ -37,96 +40,129 @@ app.controller("homectrl", function ($scope, $http, $rootScope, $location, $rout
     $scope.videos = [];
     $scope.page = 1;
     $scope.pageSize = 8;
-    $scope.limit=8
-    $scope.loadMore = function() {
-        console.log("loadmore called" +$scope.page)
+    $scope.limit = 8
+    $scope.loadMore = function () {
+        console.log("loadmore called" + $scope.page)
         var offset = ($scope.page - 1) * $scope.pageSize;
-        $http.get('videos?offset=' + offset + '&limit=' + $scope.pageSize).then(function(response) {
+        $http.get('videos?offset=' + offset + '&limit=' + $scope.pageSize).then(function (response) {
             var newItems = response.data;
             $scope.videos = $scope.videos.concat(newItems);
-            $rootScope.videos=$scope.videos;
-            $scope.limit=$scope.videos.length;
+            $rootScope.videos = $scope.videos;
+            $scope.limit = $scope.videos.length;
             $scope.page += 1;
         });
     };
     $scope.loadMore();
 
 });
-app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routeParams, $location,$q) {
-    $scope.video=[];
-    var searchObject=$location.search();
-    $scope.videoUrl="";
-    $scope.comments=[];
-    var videoId=searchObject.videoId;
+app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routeParams, $location, $q) {
+    $scope.video;
+    var searchObject = $location.search();
+    $scope.videoUrl = "";
+    $scope.videoLikes = [];
+    $scope.comments = [];
+    var videoId = searchObject.videoId;
     $http.get('videoDetail?videoId=' + videoId).then(function (response) {
         $scope.video = response.data;
+        console.log($scope.video)
         $scope.loadVideo($scope.video.id);
 
-    }, reason => {
+    });
+    $http.get('api/like/get/likeCount?videoId=' + videoId).then(function (response) {
+        if(response.data){
+            $scope.videoLikes = response.data;
+        }
+
 
     });
-    $http.get('api/comments?videoId='+videoId).then(function (response) {
-        $scope.comments=response.data;
+    $http.get('api/like/get/likeVideo?videoId='+videoId+'&userId='+$rootScope.user.id).then(function (response) {
+        if(response.data){
+            $scope.isUserLikedVideo(response.data.like)
+        }
+    })
+    $scope.likeCount = function (isLike) {
+        if (isLike) {
+            return $scope.videoLikes.likes;
+        } else {
+            return $scope.videoLikes.dislikes;
+        }
+    }
+    $scope.isUserLikedVideo=function (isLike) {
+        console.log(isLike)
+        if(isLike){
+            $scope.checkbox1=true;
+        }else {
+            $scope.checkbox2=true;
+        }
+    }
+    $scope.likeVideo = function (checkboxNumber, userId) {
+        if (checkboxNumber === 1 && $scope.checkbox2) {
+            $scope.checkbox2 = false;
+        } else if (checkboxNumber === 2 && $scope.checkbox1) {
+            $scope.checkbox1 = false;
+        }
+        if (($scope.checkbox1 && !$scope.checkbox2) || (!$scope.checkbox1 && $scope.checkbox2)) {
+            console.log("like video fire")
+            // console.log($scope.videoLikes.filter(value => value.))
+        }
+    };
+    $http.get('api/comments?videoId=' + videoId).then(function (response) {
+        $scope.comments = response.data;
         console.log($scope.comments)
+
     });
     $scope.commentsData = {};
-    $scope.loadChildrenComments = function(parentId) {
+    $scope.loadChildrenComments = function (parentId) {
         if ($scope.commentsData[parentId]) {
             return $scope.commentsData[parentId];
-        }
-        else {
-            var promise = $http.get('api/comment/get/childrenComment?parentId=' + parentId).then(function(response) {
+        } else {
+            var promise = $http.get('api/comment/get/childrenComment?parentId=' + parentId).then(function (response) {
                 $scope.commentsData[parentId] = response.data;
                 return response.data;
             });
             $scope.commentsData[parentId] = promise;
-            console.log(promise)
+            // console.log(promise)
             return promise;
         }
     };
     $scope.player = null;
-    $scope.playCount=0;
-    $scope.initPlayer = function() {
-        $scope.player= new Plyr("#plyr-video",{
-            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] }
+    $scope.playCount = 0;
+    $scope.initPlayer = function () {
+        $scope.player = new Plyr("#plyr-video", {
+            speed: {selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]}
         });
         $scope.player.on('play', (event) => {
             $scope.playCount++;
             console.log($scope.playCount)
-            if($scope.playCount==1){
-               
+            if ($scope.playCount == 1) {
+
             }
         });
     };
-    $scope.loadVideo = function(id) {
-        $http.get('streamVideo?videoId=' + id).then(function(response) {
+    $scope.loadVideo = function (id) {
+        $http.get('streamVideo?videoId=' + id).then(function (response) {
             $scope.videoUrl = response.data;
             $scope.initPlayer();
         });
     };
 
-    $scope.sendCommentToVideo=function (value,videoId,userId) {
-        $http.post('api/comment/post/commentVideo?videoId='+videoId+'&userId='+userId, value).then(function (response){
-           $scope.comments.unshift(response.data);
+    $scope.sendCommentToVideo = function (value, videoId, userId) {
+        $http.post('api/comment/post/commentVideo?videoId=' + videoId + '&userId=' + userId, value).then(function (response) {
+            $scope.comments.unshift(response.data);
 
         });
 
     };
-    $scope.sendChildrenCommentToVideo=function (value,videoId,userId,commentId) {
-        $http.post('api/comment/post/commentVideo?videoId='+videoId+'&userId='+userId+'&parentId='+commentId, value).then(function (response){
+    $scope.sendChildrenCommentToVideo = function (value, videoId, userId, commentId) {
+        $http.post('api/comment/post/commentVideo?videoId=' + videoId + '&userId=' + userId + '&parentId=' + commentId, value).then(function (response) {
             console.log($scope.commentsData[commentId])
             $scope.commentsData[commentId].push(response.data);
             console.log($scope.commentsData[commentId])
 
         });
     };
-    $scope.onCheckboxClick = function(checkboxNumber) {
-        if (checkboxNumber === 1 && $scope.checkbox2) {
-          $scope.checkbox2 = false;
-        } else if (checkboxNumber === 2 && $scope.checkbox1) {
-          $scope.checkbox1 = false;
-        }
-      };
+
+
 });
 
 

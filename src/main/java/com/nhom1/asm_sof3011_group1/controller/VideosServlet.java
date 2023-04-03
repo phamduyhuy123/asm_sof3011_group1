@@ -22,10 +22,11 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
 
-@WebServlet( name = "videos", value = {"/videos","/videoDetail","/video/poster"})
+@WebServlet( name = "videos", value = {"/videos","/videoDetail","/video/poster","/video/likes"})
 public class VideosServlet extends HttpServlet {
     private VideoDao videoDao;
     private ObjectMapper mapper;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         videoDao=new VideoDao();
@@ -50,7 +51,8 @@ public class VideosServlet extends HttpServlet {
             out.print(jsonData);
             out.close();
 
-        }else if(req.getRequestURI().contains("/videoDetail")){
+        }
+        else if(req.getRequestURI().contains("/videoDetail")){
             PrintWriter out = resp.getWriter();
             resp.setContentType("application/json");
             Video video=videoDao.findById(id);
@@ -59,7 +61,8 @@ public class VideosServlet extends HttpServlet {
             out.print(jsonData);
             out.close();
 
-        } else if(req.getRequestURI().contains("/video/poster")){
+        }
+        else if(req.getRequestURI().contains("/video/poster")){
             Video video=videoDao.findById(id);
             String bucketName = AwsS3Service.BUCKET_NAME;
             String key = "video/"+video.getVideoUrl();
@@ -110,6 +113,9 @@ public class VideosServlet extends HttpServlet {
                 outputStream.flush();
                 outputStream.close();
             }
+        }
+        else if (req.getRequestURI().contains("video/likes")) {
+
         }
     }
     @Override

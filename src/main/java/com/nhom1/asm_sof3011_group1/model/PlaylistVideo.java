@@ -11,7 +11,9 @@ import javax.persistence.*;
 @Setter
 @Entity
 @IdClass(PlaylistVideoId.class)
-@Table(name = "playlist_video")
+@Table(name = "playlist_video",
+        uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"position","playlist_id"})})
 public class PlaylistVideo {
 
     @Id

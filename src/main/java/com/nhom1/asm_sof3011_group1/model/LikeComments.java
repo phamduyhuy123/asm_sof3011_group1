@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Builder
 @AllArgsConstructor
@@ -12,15 +11,16 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Table(name = "likes",uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"video_id","user_id"})
+@Table(name = "like_comments",uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"comment_id","user_id"})
 })
-public class Like {
-
+public class LikeComments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
-    private Long likeId;
+    private Long idLikeCmt;
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
     @Column(name = "is_like")
     private boolean isLike;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,7 +32,5 @@ public class Like {
     private Video video;
 
     @Column(name = "like_date")
-    private Date likeDate;
-
-    // constructors, getters, setters, etc.
+    private LocalDateTime likeDate;
 }

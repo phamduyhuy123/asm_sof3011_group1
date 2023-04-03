@@ -15,7 +15,7 @@
         <class>com.nhom1.asm_sof3011_group1.model.Subscription</class>
         <class>com.nhom1.asm_sof3011_group1.model.ViewHistory</class>
         <class>com.nhom1.asm_sof3011_group1.model.Comment</class>
-
+        <class>com.nhom1.asm_sof3011_group1.model.LikeComments</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

@@ -47,6 +47,8 @@ public class Comment {
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private List<Comment> replies = new ArrayList<>();
+    @OneToMany(mappedBy = "comment",cascade =CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<LikeComments> likeComments=new ArrayList<>();
 
     // getters and setters
 }
