@@ -177,4 +177,26 @@ app.controller("loginctrl", function ($scope, $http, $rootScope, $location, $rou
    
 });
 
+app.controller("registerctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
+  $scope.userdangky;
+   $scope.dangky=function(){
+	   if($scope.password=== $scope.confirmpassword){
+	    	$scope.userdangky={
+				username:$scope.username,
+				email:$scope.email,
+				password:$scope.password
+			}
+			$http.post("user/dangky",$scope.userdangky).then(function (response) {
+           		if(response.data==null){
+					   
+				}else{
+					$rootScope.user=response.data;
+				}
+
+        	});
+		}
+	   
+   }
+   
+});
 

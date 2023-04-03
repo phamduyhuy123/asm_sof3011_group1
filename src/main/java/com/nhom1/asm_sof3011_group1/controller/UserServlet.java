@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,7 +29,8 @@ import java.io.PrintWriter;
                                     "/api/users", //Lấy tất cả user
                                     "/api/findUser", //Lấy 1 user bằng id truyền vào
                                     "/api/user/loadAvatar",
-                                    "/user/login"//Lấy ảnh user từ aws s3 khi tìm được user bằng id và load ảnh lên user n
+                                    "/user/login",
+                                    "/user/dangky"//Lấy ảnh user từ aws s3 khi tìm được user bằng id và load ảnh lên user n
 })
 public class UserServlet extends HttpServlet {
 
@@ -76,6 +78,27 @@ public class UserServlet extends HttpServlet {
     		String jsonData="";
     		PrintWriter out = resp.getWriter();
     		jsonData=mapper.writeValueAsString(user);
+            System.out.println(jsonData);
+            out.print(jsonData);
+            out.close();
+    	}else if(uri.contains("user/dangky")) {
+    		StringBuilder sb = new StringBuilder();
+            BufferedReader reader = req.getReader();
+            try {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append('\n');
+                }
+            } finally {
+                reader.close();
+            }
+            String jsonDataFromRequest=sb.toString();
+            User user=mapper.readValue(jsonDataFromRequest, User.class);
+            
+            User userResponse=userDao.findById(userDao.insert(user));
+            String jsonData="";
+    		PrintWriter out = resp.getWriter();
+    		jsonData=mapper.writeValueAsString(userResponse);
             System.out.println(jsonData);
             out.print(jsonData);
             out.close();
