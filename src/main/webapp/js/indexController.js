@@ -8,10 +8,10 @@ app.controller("myctrl", function ($scope, $http, $rootScope, $location, $routeP
     $rootScope.relativeTimeFilter = function (dateUpload) {
         return moment(dateUpload).fromNow();
     }
-    $http.get('api/findUser?userId=' + 2).then(function (response) {
-        $rootScope.user = response.data;
-        console.log($rootScope.user)
-    });
+   // $http.get('api/findUser?userId=' + 2).then(function (response) {
+    //    $rootScope.user = response.data;
+   //     console.log($rootScope.user)
+   // });
     $rootScope.getSearchResults = function () {
         $timeout(function () {
             $http.get('/search', {
@@ -163,6 +163,18 @@ app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routePar
     };
 
 
+});
+
+app.controller("loginctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
+  
+   $scope.login=function(){
+	   $http.post("user/login?username="+$scope.username+"&password="+$scope.password).then(function (response) {
+            $rootScope.user=response.data;
+            console.log( $rootScope.user)
+
+        });
+   }
+   
 });
 
 

@@ -48,6 +48,13 @@ public class UserDao extends DAO<User, Long>  {
         System.out.print(query.getResultList().toString());
         return query.getResultList();
     }
+    public User checkLogin(String username, String password) {
+    	String jpql="SELECT v FROM User v where v.username= :username and v.password =:password";
+        TypedQuery<User> query=em.createQuery(jpql,User.class);
+        query.setParameter("username",username);
+        query.setParameter("password",password);
+        return query.getSingleResult();
+    }
 
     @Override
     protected List<User> selectBySql(String var1, Object... var2) {

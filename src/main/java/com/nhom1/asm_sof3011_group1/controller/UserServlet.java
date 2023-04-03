@@ -27,7 +27,8 @@ import java.io.PrintWriter;
                                     "/api/user/delete", //delete user với id truyền vào
                                     "/api/users", //Lấy tất cả user
                                     "/api/findUser", //Lấy 1 user bằng id truyền vào
-                                    "/api/user/loadAvatar" //Lấy ảnh user từ aws s3 khi tìm được user bằng id và load ảnh lên user n
+                                    "/api/user/loadAvatar",
+                                    "/user/login"//Lấy ảnh user từ aws s3 khi tìm được user bằng id và load ảnh lên user n
 })
 public class UserServlet extends HttpServlet {
 
@@ -63,6 +64,23 @@ public class UserServlet extends HttpServlet {
 
         }
 
+    }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	String uri=req.getRequestURI();
+    	if(uri.contains("user/login")) {
+    		resp.setContentType("application/json");
+    		String username=req.getParameter("username")==null?null:req.getParameter("username");
+    		String password=req.getParameter("password")==null?null:req.getParameter("password");
+    		User user=userDao.checkLogin(username, password);
+    		String jsonData="";
+    		PrintWriter out = resp.getWriter();
+    		jsonData=mapper.writeValueAsString(user);
+            System.out.println(jsonData);
+            out.print(jsonData);
+            out.close();
+    	}
+    	super.doPost(req, resp);
     }
     private void getUserAvatarImage(Long id,HttpServletResponse resp) throws IOException {
             User user= userDao.findById(id);

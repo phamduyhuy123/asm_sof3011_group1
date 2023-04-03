@@ -6,17 +6,17 @@
             <h1 class="form-heading">Login</h1>
             <div class="form-group">
                 <i class="far fa-user"></i>
-                <input type="text" class="form-input border-0" placeholder="Email">
+                <input ng-model="username" type="text" class="form-input border-0" placeholder="Email">
             </div>
             <div class="form-group">
                 <i class="fas fa-key"></i>
-                <input type="password" class="form-input border-0" placeholder="Password">
+                <input type="password" ng-model="password" class="form-input border-0" placeholder="Password">
                 <div id="eye">
                     <i class="far fa-eye"></i>
                 </div>
             </div>
             <a href="">Forgot password?</a>
-            <input type="submit" value="Login" class="form-submit">
+            <input type="submit" ng-click="login()" value="Login" class="form-submit">
         </form>
     </div>
 
