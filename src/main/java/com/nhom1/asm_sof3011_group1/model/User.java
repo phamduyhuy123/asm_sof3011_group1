@@ -9,6 +9,7 @@ import java.util.Date;
 @Builder
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "user")
 public class User {

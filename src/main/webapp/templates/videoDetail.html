@@ -27,7 +27,7 @@
             <div class="d-flex ">
                 <div class="me-auto d-flex">
                     <div class="author">
-                        <img class="rounded-circle" src="api/user/loadAvatar?userId={{video.user.id}}" alt="" />
+                        <img class="rounded-circle" ng-src="{{'api/user/loadAvatar?userId=' +video.user.id}}" ng-err-src="images/free-youtube-icon-123-thumb.png" alt="" />
                     </div>
                     <div class="d-flex flex-column">
                         <span class="fw-bold fs-5 text-black-50">{{video.user.username}}</span>
@@ -84,9 +84,9 @@
 
             </div>
             <!-- user bình luận -->
-            <form method="post" class="d-flex w-100">
+            <form ng-if="user" method="post" class="d-flex w-100">
                 <div class="author">
-                    <img class="rounded-circle" src="api/user/loadAvatar?userId={{user.id}}" alt="" />
+                    <img class="rounded-circle" ng-src="{{'api/user/loadAvatar?userId='+user.id}}" ng-err-src="images/free-youtube-icon-123-thumb.png" alt="" />
                 </div>
                 <div class="w-100">
                     <div class="form-floating ms-1 w-100">
@@ -136,7 +136,7 @@
                                 Phản hồi
                             </button>
                         </div>
-                        <form method="post" class="w-100 collapse mt-2" id="collapseParentComment{{$index}}">
+                        <form ng-if="user" method="post" class="w-100 collapse mt-2" id="collapseParentComment{{$index}}">
                             <div class="w-100">
                                 <div class="form-floating ms-1 w-100">
                                     <textarea ng-model="userCommentValue" class="form-control w-100 text-black"
@@ -148,9 +148,10 @@
                                 <div class="border-top mt-2 pt-md-2 w-100 text-end">
                                     <button type="button" class="btn btn-light"
                                         ng-click="userCommentValue=null">Cancel</button>
-                                    <button ng-class="{'disabled': !userCommentValue}" type="button"
+                                    <button ng-if="$rootScope.user" ng-class="{'disabled': !userCommentValue}" type="button"
                                         ng-click="sendChildrenCommentToVideo(userCommentValue,video.id,user.id,c.commentId); userCommentValue=null;"
                                         class="btn btn-light ">Comment</button>
+                                    <button ng-if="!$rootScope.user" type="button" data-toggle="modal" data-target="#loginModal" class="btn btn-light">Comment</button>
                                 </div>
                             </div>
 
@@ -199,7 +200,7 @@
                                                 Phản hồi
                                             </button>
                                         </div>
-                                        <form method="post" class="w-100 collapse mt-2" id="collapseChildrenComment{{$index}}">
+                                        <form ng-if="user" method="post" class="w-100 collapse mt-2" id="collapseChildrenComment{{$index}}">
                                             <div class="w-100">
                                                 <div class="form-floating ms-1 w-100">
                                                     <textarea  ng-model="userCommentValue" class="form-control w-100 text-black"

@@ -5,8 +5,25 @@ app.controller("myctrl", function ($scope, $http, $rootScope, $location, $routeP
     $rootScope.videos = [];
     $rootScope.isCollapsed = false;
     $rootScope.user;
+    var user = localStorage.getItem('user');
+    if(user) {
+        $rootScope.user = JSON.parse(user);
+    }
     $rootScope.relativeTimeFilter = function (dateUpload) {
         return moment(dateUpload).fromNow();
+    }
+    $rootScope.login=function(username,password){
+        $http.post("user/login?username="+username+"&password="+password).then(function (response) {
+            if(response.data.error){
+                $scope.errorMsg=response.data.error;
+            }else {
+                $rootScope.user=response.data;
+                console.log( $rootScope.user)
+                localStorage.setItem('user', JSON.stringify($rootScope.user));
+                $location.path("/home");
+            }
+
+        });
     }
    // $http.get('api/findUser?userId=' + 2).then(function (response) {
     //    $rootScope.user = response.data;
@@ -67,19 +84,9 @@ app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routePar
         console.log($scope.video)
         $scope.loadVideo($scope.video.id);
 
-    });
-    $http.get('api/like/get/likeCount?videoId=' + videoId).then(function (response) {
-        if(response.data){
-            $scope.videoLikes = response.data;
-        }
-
 
     });
-    $http.get('api/like/get/likeVideo?videoId='+videoId+'&userId='+$rootScope.user.id).then(function (response) {
-        if(response.data){
-            $scope.isUserLikedVideo(response.data.like)
-        }
-    })
+
     $scope.likeCount = function (isLike) {
         if (isLike) {
             return $scope.videoLikes.likes;
@@ -106,11 +113,7 @@ app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routePar
             // console.log($scope.videoLikes.filter(value => value.))
         }
     };
-    $http.get('api/comments?videoId=' + videoId).then(function (response) {
-        $scope.comments = response.data;
-        console.log($scope.comments)
 
-    });
     $scope.commentsData = {};
     $scope.loadChildrenComments = function (parentId) {
         if ($scope.commentsData[parentId]) {
@@ -144,8 +147,24 @@ app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routePar
             $scope.videoUrl = response.data;
             $scope.initPlayer();
         });
-    };
+        $http.get('api/like/get/likeCount?videoId=' + videoId).then(function (response) {
+            if(response.data){
+                $scope.videoLikes = response.data;
+            }
+        });
+        if($rootScope.user){
+            $http.get('api/like/get/likeVideo?videoId='+videoId+'&userId='+$rootScope.user.id).then(function (response) {
+                if(response.data){
+                    $scope.isUserLikedVideo(response.data.like)
+                }
+            });
+        }
+        $http.get('api/comments?videoId=' + videoId).then(function (response) {
+            $scope.comments = response.data;
+            console.log($scope.comments)
 
+        });
+    };
     $scope.sendCommentToVideo = function (value, videoId, userId) {
         $http.post('api/comment/post/commentVideo?videoId=' + videoId + '&userId=' + userId, value).then(function (response) {
             $scope.comments.unshift(response.data);
@@ -162,36 +181,37 @@ app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routePar
         });
     };
 
-
 });
 
 app.controller("loginctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
-  
-   $scope.login=function(){
-	   $http.post("user/login?username="+$scope.username+"&password="+$scope.password).then(function (response) {
-            $rootScope.user=response.data;
-            console.log( $rootScope.user)
 
-        });
-   }
+
    
 });
 
 app.controller("registerctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
   $scope.userdangky;
    $scope.dangky=function(){
-	   if($scope.password=== $scope.confirmpassword){
+
+	   if($scope.password== $scope.confirmpassword){
+           console.log("da trung")
 	    	$scope.userdangky={
 				username:$scope.username,
 				email:$scope.email,
 				password:$scope.password
 			}
 			$http.post("user/dangky",$scope.userdangky).then(function (response) {
-           		if(response.data==null){
-					   
-				}else{
-					$rootScope.user=response.data;
-				}
+                console.log(response.data)
+                if (response.data.error) {
+                    $scope.errorMsg= response.data.error.split('\n');
+                } else if(response.data==null){
+
+                }
+                else {
+                    $scope.errorMsg=null;
+                    $rootScope.user=response.data;
+                    $location.path("/home");
+                }
 
         	});
 		}

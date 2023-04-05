@@ -19,18 +19,24 @@ public class UserDao extends DAO<User, Long>  {
 
     @Override
     public Long insert(User var1) {
-    	
         try {
         	em.getTransaction().begin();
         	em.persist(var1);
-        	
+            em.getTransaction().commit();
             return var1.getId();
 		} catch (Exception e) {
 			em.getTransaction().rollback();
 			throw new RuntimeException(e);
 		}
     }
-
+    public User findUserByUsernameOrEmail(User user){
+        String jpql="SELECT v FROM User v where v.username= :username or v.email =:email";
+        TypedQuery<User> query=em.createQuery(jpql,User.class);
+        query.setParameter("username",user.getUsername());
+        query.setParameter("email",user.getEmail());
+        List<User> users= query.getResultList();
+        return users.isEmpty()?null:users.get(0);
+    }
     @Override
     public Long update(User var1) {
         return null;
@@ -62,7 +68,7 @@ public class UserDao extends DAO<User, Long>  {
         TypedQuery<User> query=em.createQuery(jpql,User.class);
         query.setParameter("username",username);
         query.setParameter("password",password);
-        return query.getSingleResult();
+        return query.getResultList().isEmpty()?null:query.getResultList().get(0);
     }
 
     @Override
