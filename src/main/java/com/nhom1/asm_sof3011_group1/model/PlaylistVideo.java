@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
+
 @IdClass(PlaylistVideoId.class)
 @Table(name = "playlist_video",
         uniqueConstraints = {

@@ -10,6 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @Table(name = "playlist")
 public class Playlist {
 

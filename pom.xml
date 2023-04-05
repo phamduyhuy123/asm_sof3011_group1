@@ -137,9 +137,7 @@
                     <container>
         <containerId>tomcat9x</containerId>
         <type>embedded</type>
-        <systemProperties>
-            <cargo.tomcat.connector.http.port>8081</cargo.tomcat.connector.http.port>
-        </systemProperties>
+      
     </container>
                     <deployables>
                         <deployable>
@@ -150,6 +148,9 @@
                             </properties>
                         </deployable>
                     </deployables>
+                    <properties>
+        <cargo.servlet.port>8089</cargo.servlet.port>
+      </properties>
                 </configuration>
             </plugin>
         </plugins>
