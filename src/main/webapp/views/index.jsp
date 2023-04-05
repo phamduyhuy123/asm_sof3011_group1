@@ -10,8 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js" integrity="sha512-KZmyTq3PLx9EZl0RHShHQuXtrvdJ+m35tuOiwlcZfs/rE7NZv29ygNA8SFCkMXTnYZQK2OX0Gm2qKGfvWEtRXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-route/1.8.3/angular-route.min.js" integrity="sha512-y1qD3hz/IAf8W4+/UMLZ+CN6LIoUGi7srWJ3r1R17Hid8x0yXe+1B5ZelkaL1Mjzedzu0Cg3HBvDG02SAgSzBw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style> 
     .offcanvas-header .btn-close {
        display: none;
@@ -24,7 +24,7 @@
 }
 </style>
   </head>
-<body class="bg-dark" ng-app="myappAdmin">
+<body class="bg-dark" ng-app="myAdmin">
     <div class="row">
         <div class="col-sm-4">
           <nav class="navbar navbar-dark ">
@@ -65,7 +65,7 @@
                       </ul>
                     </li>
                   </ul>
-                </div>f
+                </div>
               </div>
             </div>
           </nav>
@@ -81,9 +81,12 @@
         </div> 
     </div>
     <ng-view></ng-view>
-<script src="../js/admin/index.js"></script>
-<script src="../js/route.js"></script>
-    <script src="js/admin/index.js"></script>
-    <script src="js/route.js"></script>
+<script>
+var myOffcanvas = document.getElementById('offcanvasDarkNavbar');
+myOffcanvas.addEventListener('shown.bs.offcanvas', function () {
+  myOffcanvas.style.width = '300px';
+});
+</script>
+<script src="../js/route-admin.js"></script>
 </body>
 </html>

@@ -22,31 +22,31 @@
                       <form>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Video ID</label>
-                          <input type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="id" type="text" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Video Title</label>
-                          <input type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="title"  type="text" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         <div class="mb-3">
-                          <label for="youtube-id" class="form-label">Duration bigin</label>
-                          <input type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <label for="youtube-id" class="form-label">Duration</label>
+                          <input ng-model="duration" type="text" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Date upload</label>
-                          <input type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="date" type="text" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Video URL</label>
-                          <input type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="videoUrl" type="file" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         <div class="mb-3">
-                          <label for="youtube-id" class="form-label">View bigin</label>
-                          <input type="number" class="form-control text-bg-dark" id="youtube-id">
+                          <label for="youtube-id" class="form-label">Views</label>
+                          <input ng-model="views" type="number" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">User ID</label>
-                          <input type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="userID" type="text" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         
 
@@ -56,25 +56,33 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-floating">
-                        <textarea class="form-control text-bg-dark" placeholder="Leave a Description here" id="floatingTextarea2" style="height: 100px"></textarea>
+                        <textarea ng-model="" class="form-control text-bg-dark" placeholder="Leave a Description here" id="floatingTextarea2" style="height: 100px"></textarea>
                         <label  for="floatingTextarea2">Description</label>
                       </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-sm-12 mt-3">
-                      <button class="btn btn-secondary float-end">
+                  <form action="">
+                      <button ng-click="create" class="btn btn-secondary float-end">
                         Create
                       </button>
-                      <button class="btn btn-secondary float-end me-3">
+                  </form>
+                  <form action="">
+                      <button ng-click="update" class="btn btn-secondary float-end me-3">
                         Update
                       </button>
-                      <button class="btn btn-secondary float-end me-3">
+                  </form>
+                  <form action="">
+                      <button ng-click="delete" class="btn btn-secondary float-end me-3">
                         Delete
                       </button>
-                      <button class="btn btn-secondary float-end me-3">
+                  </form>4
+                  <form action="">                  
+                      <button ng-click="reset" class="btn btn-secondary float-end me-3">
                         Reset
                       </button>
+                  </form>
                     </div>
                   </div>
               </div>
@@ -94,6 +102,8 @@
                 <th>View bigin</th>
                 <th>User ID</th>
                 <th>Description</th>
+				<th></th>
+                
               </tr>
               <tr>
                 <td>1</td>
@@ -105,6 +115,7 @@
                 <td>1M</td>
                 <td>Daicabancuoi</td>
                 <td>Video chỉ mang tính chất minh họa xin hãy thực hiện với thằng bạn thân ngồi bên của bạn nhé!!</td>
+                <td><a href="#">edit</a></td>
               </tr>
               
             </table>

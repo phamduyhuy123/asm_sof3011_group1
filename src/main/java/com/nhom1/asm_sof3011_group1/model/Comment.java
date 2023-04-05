@@ -9,13 +9,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-@Builder
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
+
+@Builder
 @Entity
 @Table(name = "comment")
 public class Comment {
