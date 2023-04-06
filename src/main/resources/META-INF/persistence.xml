@@ -23,6 +23,7 @@
             <property name="javax.persistence.jdbc.user" value="phamduyhuy"/>
             <property name="javax.persistence.jdbc.password" value="tun8111474652"/>
             <property name="javax.persistence.schema-generation.database.action" value="create"/>
+
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
         </properties>

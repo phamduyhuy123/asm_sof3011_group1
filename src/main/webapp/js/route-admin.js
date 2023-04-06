@@ -6,7 +6,7 @@ app.config(function($routeProvider){
     $routeProvider
     .when("/",{
         templateUrl : "/views/video.jsp",
-        controller: 'HomeController'
+        controller: 'videoController'
     })
     .when("/video",{
         templateUrl : "/views/video.jsp",
@@ -33,7 +33,7 @@ app.controller("videoController", function ($scope, $http, $rootScope, $location
 			views : 0,
 			thumbnailUrl : $scope.thumbnailUrl,
 			videoUrl : $scope.videoUrl,
-			user : $scope.userID
+			user : { id: $scope.userID }
 		};
 		$http.post("api/admin/video/insert",$scope.video).then(function (response) {
 			console.log(response.data);

@@ -64,7 +64,7 @@
                   <div class="row">
                     <div class="col-sm-12 mt-3">
                   <form action="">
-                      <button ng-click="create" class="btn btn-secondary float-end">
+                      <button ng-click="create()" class="btn btn-secondary float-end">
                         Create
                       </button>
                   </form>

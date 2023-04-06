@@ -36,12 +36,18 @@ public class VideoDao extends DAO<Video,Long>{
             em.getTransaction().rollback();
             throw new RuntimeException(ex);
         }
-
     }
-
     @Override
     public Long delete(Long var1) {
-        return null;
+        try {
+            em.getTransaction().begin();
+            em.remove(var1);
+            em.getTransaction().commit();
+            return var1;
+        }catch (Exception ex){
+            em.getTransaction().rollback();
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhom1.asm_sof3011_group1.dao.UserDao;
+import com.nhom1.asm_sof3011_group1.model.Role;
 import com.nhom1.asm_sof3011_group1.model.User;
 import com.nhom1.asm_sof3011_group1.model.Video;
 import com.nhom1.asm_sof3011_group1.utils.AwsS3Service;
@@ -55,7 +56,7 @@ public class UserServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         // Set the S3 bucket and key for the image
         String uri = req.getRequestURI();
-        Long id = req.getParameter("userId").isEmpty() ? null : Long.parseLong(req.getParameter("userId"));
+        Long id = req.getParameter("userId")==null ? null : Long.parseLong(req.getParameter("userId"));
 
         if (uri.contains("/api/user/loadAvatar") && id != null) {
             getUserAvatarImage(id, resp);
@@ -84,8 +85,9 @@ public class UserServlet extends HttpServlet {
             resp.setContentType("application/json");
             String username = req.getParameter("username") == null ? null : req.getParameter("username");
             String password = req.getParameter("password") == null ? null : req.getParameter("password");
+
             if(username!=null&&password!=null){
-                User user = userDao.checkLogin(username, password);
+                User user = userDao.checkLogin(username, password, Role.USER);
                 if(user!=null){
                     String jsonData = "";
                     PrintWriter out = resp.getWriter();
@@ -106,74 +108,7 @@ public class UserServlet extends HttpServlet {
             }
 
         } else if (uri.contains("user/dangky")) {
-            StringBuilder sb = new StringBuilder();
-            BufferedReader reader = req.getReader();
-            boolean isValidated = true;
-            StringBuilder errorMsg = new StringBuilder();
-            try {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append('\n');
-                }
-            } finally {
-                reader.close();
-            }
-
-            String jsonDataFromRequest = sb.toString();
-            System.out.println(jsonDataFromRequest);
-            User user = mapper.readValue(jsonDataFromRequest, User.class);
-            user.setJoinDate(new Date());
-            System.out.println(user.toString());
-            resp.setContentType("application/json");
-            Map<String, Object> responseMap = new HashMap<String, Object>();
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            if (user.getUsername() == null) {
-                errorMsg.append("UserName đang để trống").append('\n');
-                isValidated = false;
-            }
-            if (user.getPassword() == null) {
-                errorMsg.append("Password đang để trống").append('\n');
-                isValidated = false;
-            }
-            if (user.getEmail() == null) {
-                errorMsg.append("Email đang để trống").append('\n');
-                isValidated = false;
-            } else if (!patternMatches(user.getEmail(), "^(.+)@(\\S+)$")) {
-
-                errorMsg.append("Định dang email không đúng").append('\n');
-                isValidated = false;
-            }
-            boolean isDuplicate = true;
-            if ( isValidated) {
-                User checkuser = userDao.findUserByUsernameOrEmail(user);
-                if(checkuser!=null){
-                    if (checkuser.getUsername() != null) {
-                        errorMsg.append("Username này đã tồn tại trong hệ thống").append('\n');
-                        isDuplicate = false;
-                    }
-                    if (checkuser.getEmail() != null) {
-                        errorMsg.append("Email này đã tồn tại trong hệ thống").append('\n');
-                        isDuplicate = false;
-                    }
-                }
-
-            }
-            if (!isValidated || !isDuplicate) {
-                PrintWriter out = resp.getWriter();
-                responseMap.put("error", errorMsg.toString());
-                out.print(mapper.writeValueAsString(responseMap));
-                out.close();
-            } else {
-                resp.setContentType("application/json");
-                Long idReturn = userDao.insert(user);
-                User userResponse = userDao.findById(idReturn);
-                String jsonData = "";
-                PrintWriter out = resp.getWriter();
-                jsonData = mapper.writeValueAsString(userResponse);
-                System.out.println(jsonData);
-                out.print(jsonData);
-                out.close();
-            }
+            userRegister(req,resp);
 
         }
 
@@ -191,10 +126,77 @@ public class UserServlet extends HttpServlet {
         OutputStream outputStream = resp.getOutputStream();
         ImageIO.write(image, "jpeg", outputStream);
         outputStream.close();
-
-
     }
+    private void userRegister(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = req.getReader();
+        boolean isValidated = true;
+        StringBuilder errorMsg = new StringBuilder();
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append('\n');
+            }
+        } finally {
+            reader.close();
+        }
 
+        String jsonDataFromRequest = sb.toString();
+        System.out.println(jsonDataFromRequest);
+        User user = mapper.readValue(jsonDataFromRequest, User.class);
+        user.setJoinDate(new Date());
+        System.out.println(user.toString());
+        resp.setContentType("application/json");
+        Map<String, Object> responseMap = new HashMap<String, Object>();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        if (user.getUsername() == null) {
+            errorMsg.append("UserName đang để trống").append('\n');
+            isValidated = false;
+        }
+        if (user.getPassword() == null) {
+            errorMsg.append("Password đang để trống").append('\n');
+            isValidated = false;
+        }
+        if (user.getEmail() == null) {
+            errorMsg.append("Email đang để trống").append('\n');
+            isValidated = false;
+        } else if (!patternMatches(user.getEmail(), "^(.+)@(\\S+)$")) {
+
+            errorMsg.append("Định dang email không đúng").append('\n');
+            isValidated = false;
+        }
+        boolean isDuplicate = true;
+        if ( isValidated) {
+            User checkuser = userDao.findUserByUsernameOrEmail(user);
+            if(checkuser!=null){
+                if (checkuser.getUsername() != null) {
+                    errorMsg.append("Username này đã tồn tại trong hệ thống").append('\n');
+                    isDuplicate = false;
+                }
+                if (checkuser.getEmail() != null) {
+                    errorMsg.append("Email này đã tồn tại trong hệ thống").append('\n');
+                    isDuplicate = false;
+                }
+            }
+
+        }
+        if (!isValidated || !isDuplicate) {
+            PrintWriter out = resp.getWriter();
+            responseMap.put("error", errorMsg.toString());
+            out.print(mapper.writeValueAsString(responseMap));
+            out.close();
+        } else {
+            resp.setContentType("application/json");
+            Long idReturn = userDao.insert(user);
+            User userResponse = userDao.findById(idReturn);
+            String jsonData = "";
+            PrintWriter out = resp.getWriter();
+            jsonData = mapper.writeValueAsString(userResponse);
+            System.out.println(jsonData);
+            out.print(jsonData);
+            out.close();
+        }
+    }
     private boolean patternMatches(String emailAddress, String regexPattern) {
         return Pattern.compile(regexPattern)
                 .matcher(emailAddress)

@@ -1,5 +1,6 @@
 package com.nhom1.asm_sof3011_group1.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,8 +27,9 @@ public class Channel {
     @Temporal(TemporalType.DATE)
     private Date creationDate;
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
+    @JsonManagedReference
     private User user;
 
     // getters and setters

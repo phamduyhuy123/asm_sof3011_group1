@@ -2,6 +2,8 @@ package com.nhom1.asm_sof3011_group1.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -45,7 +47,13 @@ public class Video {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Comment> comments;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Like> likes;
 
     // getters and setters
 }
