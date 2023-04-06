@@ -38,6 +38,9 @@ app.controller("myctrl", function ($scope, $http, $rootScope, $location, $routeP
             });
         }, 1000);
     };
+    $rootScope.next = function(number){
+        $location.path("/forgotpassword"+number);
+    }
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
         $timeout(function () {
             var element = document.querySelector('.main-content');
@@ -247,5 +250,19 @@ app.controller("userChanelctrl", function ($scope, $http, $rootScope, $location,
         }
 
     }
+});
+app.controller("forgotctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
+   
+
+});
+app.controller("forgot2ctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
+
+
+
+});
+app.controller("forgot3ctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
+
+
+
 });
 

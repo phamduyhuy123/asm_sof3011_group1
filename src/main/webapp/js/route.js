@@ -20,7 +20,17 @@ app.config(function ($routeProvider) {
     }).when("/userChanel",{
         templateUrl:"templates/userChanel.html",
         controller: "userChanelctrl"
+    }).when("/forgotpassword",{
+        templateUrl:"templates/forgotpassword.html",
+        controller: "forgotctrl"
+    }).when("/forgotpassword2",{
+        templateUrl:"templates/forgotpassword2.html",
+        controller: "forgot2ctrl"
+    }).when("/forgotpassword3",{
+        templateUrl:"templates/forgotpassword3.html",
+        controller: "forgot3ctrl"
     })
+    
         .otherwise({
             redirectTo: "/home"
 

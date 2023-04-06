@@ -153,6 +153,9 @@ hr {
     background-color: black;
     color: #e5e5e5;
   }
+  .changecolor::placeholder {
+    color: white;
+  }
   .reply-rate{
     position: relative;
     display: flex;
