@@ -31,11 +31,12 @@ app.controller("videoController", function ($scope, $http, $rootScope, $location
 	})
     $scope.create = function(){
 		var formData = new FormData();
-            formData.append('videoTitle', $scope.title);
-            formData.append('videoDescription', $scope.videoDescription);
+            formData.append('videoTitle', $scope.video.title);
+            formData.append('videoDescription', $scope.video.description);
             formData.append('videoFile', document.getElementById('videoFile').files[0]);
             formData.append('videoThumbnailFile', document.getElementById('videoThumbnailFile').files[0]);
-            formData.append('user',$scope.userID);
+            formData.append('user',$scope.video.user.id);
+            console.log($scope.video.description);
 		$http.post("api/admin/video/insert",formData,
                 {
                     transformRequest: angular.identity,
@@ -58,5 +59,6 @@ app.controller("videoController", function ($scope, $http, $rootScope, $location
 	$scope.update = function(id){
 		$scope.video= $scope.videos.find(item => item.id === id);
 		console.log($scope.video)
+		document.getElementById("home-tab").click();
 	}
 });

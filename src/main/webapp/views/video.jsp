@@ -30,27 +30,27 @@
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Duration</label>
-                          <input ng-model="duration" type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="video.duration" type="text" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Date upload</label>
-                          <input ng-model="date" type="text" class="form-control text-bg-dark" id="">
+                          <input ng-model="video.uploadDate" type="text" class="form-control text-bg-dark" id="">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Video URL</label>
-                          <input name="videoFile"  type="file" class="form-control text-bg-dark" id="videoFile">
+                          <input ng-model="video.videoUrl" name="videoFile"  type="file" class="form-control text-bg-dark" id="videoFile">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Thumbnail URL</label>
-                          <input   name="videoThumbnailFile" type="file" class="form-control text-bg-dark" id="videoThumbnailFile">
+                          <input ng-model="video.thumbnailUrl"  name="videoThumbnailFile" type="file" class="form-control text-bg-dark" id="videoThumbnailFile">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Views</label>
-                          <input ng-model="views" type="number" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="video.views" type="number" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">User ID</label>
-                          <input ng-model="userID" name="user" type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="video.user.id" name="user" type="text" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         
 
@@ -60,7 +60,7 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-floating">
-                        <textarea ng-model="videoDescription" name="videoDescription" class="form-control text-bg-dark" placeholder="Leave a Description here" id="floatingTextarea2" style="height: 100px"></textarea>
+                        <textarea ng-model="video.description" name="videoDescription" class="form-control text-bg-dark" placeholder="Leave a Description here" id="floatingTextarea2" style="height: 100px"></textarea>
                         <label  for="floatingTextarea2">Description</label>
                       </div>
                     </div>
@@ -81,7 +81,7 @@
                       <button ng-click="delete()" class="btn btn-secondary float-end me-3">
                         Delete
                       </button>
-                  </form>4
+                  </form>
                   <form action="">                  
                       <button ng-click="reset()" class="btn btn-secondary float-end me-3">
                         Reset
@@ -120,7 +120,7 @@
                 <td>{{v.user.id}}</td>
                 <td>{{v.description}}</td>
                 <td> 
-                <a ng-click="update(v.id)" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="false">
+                <a ng-click="update(v.id)" type="button">
                 edit</a>
                 </td>
               </tr>
