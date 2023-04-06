@@ -13,7 +13,8 @@ app.config(function($routeProvider){
         controller: 'videoController'
     })
     .when("/user",{
-        templateUrl : "/views/user.jsp"
+        templateUrl : "/views/user.jsp",
+        controller: 'videoController'
     })
     .when("/report",{
         templateUrl : "/views/index.jsp"
@@ -24,24 +25,33 @@ app.config(function($routeProvider){
 
 });
 app.controller("videoController", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
-    $scope.video;
+    $scope.videos=[];
+    $http.get('api/admin/videos').then(function(response){
+		$scope.videos=response.data;
+	})
     $scope.create = function(){
-		$scope.video = {
-			title: $scope.title,
-			description : $scope.description,
-			duration : $scope.duration,
-			views : 0,
-			thumbnailUrl : $scope.thumbnailUrl,
-			videoUrl : $scope.videoUrl,
-			user : { id: $scope.userID }
-		};
-		$http.post("api/admin/video/insert",$scope.video).then(function (response) {
+		var formData = new FormData();
+            formData.append('videoTitle', $scope.title);
+            formData.append('videoDescription', $scope.videoDescription);
+            formData.append('videoFile', document.getElementById('videoFile').files[0]);
+            formData.append('videoThumbnailFile', document.getElementById('videoThumbnailFile').files[0]);
+            formData.append('user',$scope.userID);
+		$http.post("api/admin/video/insert",formData,
+                {
+                    transformRequest: angular.identity,
+                    headers: {
+                        'Content-Type': undefined
+                    }
+                }
+		
+		 ).then(function (response) {
 			console.log(response.data);
-           		if(response.data==null){
-					    
-				}else{
-					
-				}
+           		if (response.data.error) {
+                    $scope.errorMsg=response.data.error;
+                } else {
+                    console.log(response.data)
+                    $scope.videos.push(response.data);
+                }
 
         	});
 	}

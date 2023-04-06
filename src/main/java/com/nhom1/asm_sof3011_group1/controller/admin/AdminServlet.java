@@ -10,8 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhom1.asm_sof3011_group1.dao.UserDao;
 import com.nhom1.asm_sof3011_group1.dao.VideoDao;
+import com.nhom1.asm_sof3011_group1.model.Video;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 
 @WebServlet(name="admin",
@@ -40,6 +43,16 @@ public class AdminServlet extends HttpServlet {
         if(uri.equals("/admin")){
             req.getRequestDispatcher("/views/index.jsp").forward(req,resp);
         }
+        else if(uri.contains("api/admin/videos")) {
+			PrintWriter out = resp.getWriter();
+            resp.setContentType("application/json");
+            String jsonData="";
+            List<Video> videos=videoDao.findAll();
+            jsonData=mapper.writeValueAsString(videos);
+            System.out.println(jsonData);
+            out.print(jsonData);
+            out.close();
+		}
 
     }
     @Override

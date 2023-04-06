@@ -19,14 +19,14 @@
                       <img src="img/bee.png" height="200px" alt="">
                     </div>
                     <div class="col-sm-8">
-                      <form>
+                      <form enctype="multipart/form-data" >
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Video ID</label>
                           <input ng-model="id" type="text" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Video Title</label>
-                          <input ng-model="title"  type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="title"  name="videoTitle" type="text" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Duration</label>
@@ -34,11 +34,15 @@
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Date upload</label>
-                          <input ng-model="date" type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="date" type="text" class="form-control text-bg-dark" id="">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Video URL</label>
-                          <input ng-model="videoUrl" type="file" class="form-control text-bg-dark" id="youtube-id">
+                          <input name="videoFile"  type="file" class="form-control text-bg-dark" id="videoFile">
+                        </div>
+                        <div class="mb-3">
+                          <label for="youtube-id" class="form-label">Thumbnail URL</label>
+                          <input   name="videoThumbnailFile" type="file" class="form-control text-bg-dark" id="videoThumbnailFile">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Views</label>
@@ -46,7 +50,7 @@
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">User ID</label>
-                          <input ng-model="userID" type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="userID" name="user" type="text" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         
 
@@ -56,30 +60,30 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-floating">
-                        <textarea ng-model="" class="form-control text-bg-dark" placeholder="Leave a Description here" id="floatingTextarea2" style="height: 100px"></textarea>
+                        <textarea ng-model="videoDescription" name="videoDescription" class="form-control text-bg-dark" placeholder="Leave a Description here" id="floatingTextarea2" style="height: 100px"></textarea>
                         <label  for="floatingTextarea2">Description</label>
                       </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-sm-12 mt-3">
-                  <form action="">
+                
                       <button ng-click="create()" class="btn btn-secondary float-end">
                         Create
                       </button>
-                  </form>
+                
                   <form action="">
-                      <button ng-click="update" class="btn btn-secondary float-end me-3">
+                      <button ng-click="update()" class="btn btn-secondary float-end me-3">
                         Update
                       </button>
                   </form>
                   <form action="">
-                      <button ng-click="delete" class="btn btn-secondary float-end me-3">
+                      <button ng-click="delete()" class="btn btn-secondary float-end me-3">
                         Delete
                       </button>
                   </form>4
                   <form action="">                  
-                      <button ng-click="reset" class="btn btn-secondary float-end me-3">
+                      <button ng-click="reset()" class="btn btn-secondary float-end me-3">
                         Reset
                       </button>
                   </form>
@@ -99,22 +103,22 @@
                 <th>Duration bigin</th>
                 <th>Date upload</th>
                 <th>Video URL</th>
-                <th>View bigin</th>
+                <th>View </th>
                 <th>User ID</th>
                 <th>Description</th>
 				<th></th>
                 
               </tr>
-              <tr>
-                <td>1</td>
-                <td>Cách đấm thằng ngồi bên khi đi học</td>
-                <td>anhdamsmlthangngoiben.png</td>
-                <td>1:00:00</td>
-                <td>29/03/2023</td>
-                <td>youtube.com/damthangbansml</td>
-                <td>1M</td>
-                <td>Daicabancuoi</td>
-                <td>Video chỉ mang tính chất minh họa xin hãy thực hiện với thằng bạn thân ngồi bên của bạn nhé!!</td>
+              <tr ng-repeat="v in videos">
+                <td>{{v.id}}</td>
+                <td>{{v.title}}</td>
+                <td></td>
+                <td>{{v.duration}}</td>
+                <td>{{v.uploadDate}}</td>
+                <td>{{v.videoUrl}}</td>
+                <td>{{v.views}}</td>
+                <td>{{v.user.id}}</td>
+                <td>{{v.description}}</td>
                 <td><a href="#">edit</a></td>
               </tr>
               

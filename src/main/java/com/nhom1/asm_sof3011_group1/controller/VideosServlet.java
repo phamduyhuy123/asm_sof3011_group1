@@ -215,6 +215,7 @@ public class VideosServlet extends HttpServlet {
                video.setThumbnailUrl(FilenameUtils.removeExtension(video.getVideoUrl()) + ".jpg");
            }
            Video videoResponse=videoDao.findById(videoDao.insert(video));
+           System.out.println(videoResponse);
            String jsonData = "";
            PrintWriter out = resp.getWriter();
            jsonData = mapper.writeValueAsString(videoResponse);
