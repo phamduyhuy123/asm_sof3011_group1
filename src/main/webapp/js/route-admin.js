@@ -55,4 +55,8 @@ app.controller("videoController", function ($scope, $http, $rootScope, $location
 
         	});
 	}
+	$scope.update = function(id){
+		$scope.video= $scope.videos.find(item => item.id === id);
+		console.log($scope.video)
+	}
 });

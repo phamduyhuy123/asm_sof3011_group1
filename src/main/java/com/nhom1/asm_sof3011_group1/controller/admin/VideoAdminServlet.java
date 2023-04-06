@@ -35,7 +35,7 @@ import com.nhom1.asm_sof3011_group1.model.User;
 import com.nhom1.asm_sof3011_group1.model.Video;
 import com.nhom1.asm_sof3011_group1.utils.AwsS3Service;
 @WebServlet(name="VideoAdmin", value = {
-		
+		"/api/admin/video/edit",
 		"/api/admin/video/insert",
 		"/api/admin/uploadFile"
 })
@@ -154,6 +154,15 @@ public class VideoAdminServlet extends HttpServlet{
 		}else if(uri.contains("api/admin/uploadFile")) {
 			
 		}
+	}
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String uri = req.getRequestURI();
+		req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        if(uri.contains("api/admin/video/edit")) {
+        	
+        }
 	}
 	private String getFileName(Part part) {
         String contentDispositionHeader = part.getHeader("content-disposition");

@@ -22,11 +22,11 @@
                       <form enctype="multipart/form-data" >
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Video ID</label>
-                          <input ng-model="id" type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="video.id" type="text" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Video Title</label>
-                          <input ng-model="title"  name="videoTitle" type="text" class="form-control text-bg-dark" id="youtube-id">
+                          <input ng-model="video.title"  name="videoTitle" type="text" class="form-control text-bg-dark" id="youtube-id">
                         </div>
                         <div class="mb-3">
                           <label for="youtube-id" class="form-label">Duration</label>
@@ -73,7 +73,7 @@
                       </button>
                 
                   <form action="">
-                      <button ng-click="update()" class="btn btn-secondary float-end me-3">
+                      <button ng-click="update(video.id)" class="btn btn-secondary float-end me-3">
                         Update
                       </button>
                   </form>
@@ -119,7 +119,10 @@
                 <td>{{v.views}}</td>
                 <td>{{v.user.id}}</td>
                 <td>{{v.description}}</td>
-                <td><a href="#">edit</a></td>
+                <td> 
+                <a ng-click="update(v.id)" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="false">
+                edit</a>
+                </td>
               </tr>
               
             </table>
