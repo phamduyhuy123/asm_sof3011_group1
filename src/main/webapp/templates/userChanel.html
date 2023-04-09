@@ -7,10 +7,28 @@
 <div class="justify-content-center">
   <div>
     <h1 class="text-white">Chanel content</h1>
-    <div class="d-flex justify-content-end">
-      <div class="form-group me-5">
-        <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadVideo">Upload
+    <div class="d-flex justify-content-between">
+      <div class="form-group me-5 d-flex">
+        <button ng-if="user" type="submit" class="btn btn-primary" data-bs-toggle="modal"
+          data-bs-target="#uploadVideo">Upload
           video</button>
+        <button ng-if="!user" ng-click="isLogin()" type="submit" class="btn btn-primary">Upload
+          video</button>
+          <div class="ms-3">
+            
+            <div class="input-group">
+              <input ng-model="searchtxt" type="text" class="form-control rounded-start-pill" id="autoSizingInputGroup" placeholder="Search">
+              
+              <button class="input-group-text rounded-end-pill" ><i
+                class="bi bi-search"></i></button>
+            </div>
+          </div>
+      </div>
+      
+      <div>
+        <button ng-click="doAction()" ng-show="hasSelected" class="btn btn-secondary " type="button">
+          Delete
+        </button>
       </div>
     </div>
     <hr>
@@ -28,10 +46,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="v in videos">
-        <td><input type="checkbox" name="" id=""></td>
+      <tr ng-repeat="v in videos | filter:searchtxt">
+        <td><input type="checkbox" name="" id="" ng-model="selectedVideos[v.id]" ng-change="updateSelected()"></td>
         <td>
-          <img class="img-fluid" src="video/poster?videoId={{v.id}}" alt="">
+          <img width="55px" height="55px" class="img-fluid" src="video/poster?videoId={{v.id}}" alt="">
         </td>
         <td>{{v.title}}</td>
         <td>{{v.description}}</td>
@@ -43,7 +61,7 @@
 </div>
 <div class="modal fade " id="uploadVideo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form  enctype="multipart/form-data" class="modal-content">
+    <form enctype="multipart/form-data" class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Upload video</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -52,30 +70,30 @@
         <div class="row justify-content-center p-0">
           <div class="col-md-11">
             <h1 class="text-center mb-5">Upload Video</h1>
-            
-              <div class="form-group">
-                <label class="text-white" for="videoTitle">Title</label>
-                <input ng-model="title" type="text" class="form-control" id="videoTitle" name="videoTitle"
-                  placeholder="Enter video title">
-              </div>
-              <div class="form-group">
-                <label class="text-white" for="videoDescription">Description</label>
-                <textarea ng-model="description" class="form-control" id="videoDescription" name="videoDescription"
-                  placeholder="Enter video description"></textarea>
-              </div>
-              <div class="form-group mt-2">
-                <label class="text-white" for="videoFile">Choose video file</label>
-                <input type="file" class="form-control-file text-white" id="videoFile" name="videoFile">
-              </div>
-              <div class="form-group mt-2">
-                <label class="text-white" for="videoFile">Choose video thumbnail</label>
-                <input type="file" class="form-control-file text-white" id="videoThumbnailFile"
-                  name="videoThumbnailFile">
-              </div>
+
+            <div class="form-group">
+              <label class="text-white" for="videoTitle">Title</label>
+              <input ng-model="title" type="text" class="form-control" id="videoTitle" name="videoTitle"
+                placeholder="Enter video title">
+            </div>
+            <div class="form-group">
+              <label class="text-white" for="videoDescription">Description</label>
+              <textarea ng-model="description" class="form-control" id="videoDescription" name="videoDescription"
+                placeholder="Enter video description"></textarea>
+            </div>
+            <div class="form-group mt-2">
+              <label class="text-white" for="videoFile">Choose video file</label>
+              <input accept="video/*" type="file" class="form-control-file text-white" id="videoFile" name="videoFile">
+            </div>
+            <div class="form-group mt-2">
+              <label class="text-white" for="videoFile">Choose video thumbnail</label>
+              <input accept="image/*" type="file" class="form-control-file text-white" id="videoThumbnailFile"
+                name="videoThumbnailFile">
+            </div>
             <div ng-if="errorMsg" class="alert alert-danger d-flex flex-column" role="alert">
-                <span class="fs-5 text-danger" ng-repeat="err in errorMsg">
-                    {{err}}
-                </span>
+              <span class="fs-5 text-danger" ng-repeat="err in errorMsg">
+                {{err}}
+              </span>
             </div>
           </div>
         </div>

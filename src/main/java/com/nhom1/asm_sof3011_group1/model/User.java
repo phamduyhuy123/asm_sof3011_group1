@@ -42,7 +42,6 @@ public class User {
     private String avatarUrl;
 
     @Column(name = "join_date")
-    @Temporal(TemporalType.DATE)
     private Date joinDate;
 
     @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
@@ -52,6 +51,7 @@ public class User {
     @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Comment> comments;
-
-
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ViewHistory> viewHistories;
 }

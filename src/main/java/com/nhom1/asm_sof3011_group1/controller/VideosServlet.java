@@ -33,14 +33,20 @@ import java.util.List;
 import java.util.Map;
 
 @MultipartConfig
-@WebServlet( name = "videos", value = {"/videos","/videoDetail","/video/poster","/video/likes","/video/upload"})
+@WebServlet( name = "videos", value = {
+        "/videos",
+        "/videoDetail",
+        "/video/poster",
+        "/video/likes",
+        "/video/upload",
+        "/video/userVideo"})
 public class VideosServlet extends HttpServlet {
-    private VideoDao videoDao;
+
     private ObjectMapper mapper;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        videoDao=new VideoDao();
+
         mapper = new ObjectMapper();
     }
 
@@ -51,6 +57,7 @@ public class VideosServlet extends HttpServlet {
 
         String jsonData="";
         Long id = req.getParameter("videoId")==null ? null:Long.parseLong(req.getParameter("videoId"));
+        VideoDao videoDao=new VideoDao();
         if(req.getRequestURI().contains("/videos")){
             String limit =req.getParameter("limit");
             String offSet=req.getParameter("offset");
@@ -78,12 +85,25 @@ public class VideosServlet extends HttpServlet {
         }
         else if (req.getRequestURI().contains("video/likes")) {
 
+        } else if (req.getRequestURI().contains("video/userVideo")) {
+            Long userId=
+                    req.getParameter("userId")==null || req.getParameter("userId").equals("undefined")
+                    ?null:Long.parseLong(req.getParameter("userId"));
+            if(userId!=null){
+                List<Video> videoListResponse=videoDao.findByUserId(userId);
+                jsonData= mapper.writeValueAsString(videoListResponse);
+                PrintWriter out=resp.getWriter();
+                out.print(jsonData);
+                out.close();
+            }
+
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
         if (req.getRequestURI().contains("video/upload")) {
             resp.setContentType("application/json");
             userUploadNewVideo(req,resp);
@@ -91,6 +111,7 @@ public class VideosServlet extends HttpServlet {
     }
 
     private void getVideoThumnail(Long id, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+        VideoDao videoDao=new VideoDao();
         Video video=videoDao.findById(id);
         String bucketName = AwsS3Service.BUCKET_NAME;
         String key = "video/"+video.getVideoUrl();
@@ -127,7 +148,7 @@ public class VideosServlet extends HttpServlet {
             outputStream.flush();
             outputStream.close();
         }else {
-            String thumbnailKey = "thumbnails/" +video.getId()+"_" + video.getThumbnailUrl();
+            String thumbnailKey = "thumbnails/" + video.getUser().getId()+ "_" + video.getThumbnailUrl();
             S3Object s3object = s3client.getObject(new GetObjectRequest(bucketName, thumbnailKey));
             InputStream inputStream = s3object.getObjectContent();
             resp.setContentType("image/jpeg"); // set content type of response
@@ -160,7 +181,7 @@ public class VideosServlet extends HttpServlet {
             isValidated=false;
             errorMsg.append("Tiêu đề video đang để trống").append('\n');
         }
-        if(partVideo==null){
+        if(getFileName(partVideo)==null){
             isValidated=false;
             errorMsg.append("Vui lòng chọn file video bạn muốn upload");
         }
@@ -190,7 +211,7 @@ public class VideosServlet extends HttpServlet {
                    "video/"+video.getUser().getId()+"_"+video.getVideoUrl(),
                    partVideo.getInputStream(),
                    new ObjectMetadata());
-           if(partThumbnail!=null){
+           if(getFileName(partThumbnail)!=null){
                s3client.putObject(
                        AwsS3Service.BUCKET_NAME,
                        "thumbnails/"+video.getUser().getId()+"_"+video.getThumbnailUrl(),
@@ -206,7 +227,7 @@ public class VideosServlet extends HttpServlet {
                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                ImageIO.write(image, "jpeg", outputStream);
                byte[] thumbnailBytes = outputStream.toByteArray();
-               String thumbnailKey = "thumbnails/" +video.getId()+"_" +FilenameUtils.removeExtension(video.getVideoUrl()) + ".jpg";
+               String thumbnailKey = "thumbnails/" +video.getUser().getId()+"_" +FilenameUtils.removeExtension(video.getVideoUrl()) + ".jpg";
                ObjectMetadata metadata = new ObjectMetadata();
                metadata.setContentLength(thumbnailBytes.length);
                s3client.putObject(AwsS3Service.BUCKET_NAME, thumbnailKey, new ByteArrayInputStream(thumbnailBytes), metadata);
@@ -214,6 +235,7 @@ public class VideosServlet extends HttpServlet {
                outputStream.close();
                video.setThumbnailUrl(FilenameUtils.removeExtension(video.getVideoUrl()) + ".jpg");
            }
+           VideoDao videoDao=new VideoDao();
            Video videoResponse=videoDao.findById(videoDao.insert(video));
            System.out.println(videoResponse);
            String jsonData = "";

@@ -16,18 +16,20 @@ import java.util.List;
 
 @WebServlet(name = "LikesVideo",value = {"/api/like/get/likeCount","/api/like/get/likeVideo"})
 public class LikeServlet extends HttpServlet{
-    private LikesDao likesDao;
+
     private ObjectMapper objectMapper;
     @Override
     public void init(ServletConfig config) throws ServletException {
-        likesDao=new LikesDao();
+
         objectMapper=new ObjectMapper();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
         String uri=req.getRequestURI();
-
+        LikesDao likesDao=new LikesDao();
         if(uri.contains("api/like/get/likeCount")){
             Long videoId = req.getParameter("videoId")==null ? null:Long.parseLong(req.getParameter("videoId"));
             if(videoId!=null){
@@ -59,5 +61,8 @@ public class LikeServlet extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPost(req, resp);
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        LikesDao likesDao=new LikesDao();
     }
 }

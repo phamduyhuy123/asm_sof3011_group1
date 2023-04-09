@@ -27,7 +27,6 @@ public class Comment {
     private String commentText;
 
     @Column(name = "comment_date")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date commentDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

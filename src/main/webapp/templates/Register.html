@@ -1,7 +1,7 @@
 
     <div id="wrapper">
 
-        <form  id="form-login">
+        <form  id="form-login" >
             <h1 class="form-heading">Register</h1>
             <div ng-if="errorMsg" class="alert alert-danger d-flex flex-column" role="alert">
                 <span class="fs-5 text-danger" ng-repeat="err in errorMsg">
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="password" ng-model="confirmpassword" class="form-input border-0" placeholder="Password Confirm">
+                <input type="password" ng-model="confirmpassword" name="confirmpassword" class="form-input border-0" placeholder="Password Confirm">
                 
             </div>
             <input type="submit" ng-click="dangky()" value="Register" class="form-submit">

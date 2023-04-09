@@ -12,12 +12,18 @@ app.controller("myctrl", function ($scope, $http, $rootScope, $location, $routeP
     $rootScope.relativeTimeFilter = function (dateUpload) {
         return moment(dateUpload).fromNow();
     }
+    $rootScope.logOut = function () {
+        $rootScope.user = null;
+        localStorage.setItem('user', null);
+        $location.path("/login");
+    }
     $rootScope.login = function (username, password) {
         $http.post("user/login?username=" + username + "&password=" + password).then(function (response) {
             if (response.data.error) {
                 $scope.errorMsg = response.data.error;
             } else {
                 $rootScope.user = response.data;
+                $scope.errorMsg = null;
                 console.log($rootScope.user)
                 localStorage.setItem('user', JSON.stringify($rootScope.user));
                 $location.path("/home");
@@ -32,14 +38,14 @@ app.controller("myctrl", function ($scope, $http, $rootScope, $location, $routeP
     $rootScope.getSearchResults = function () {
         $timeout(function () {
             $http.get('/search', {
-                params: { q: $rootScope.searchQuery }
+                params: {q: $rootScope.searchQuery}
             }).then(function (response) {
                 $rootScope.searchResults = response.data;
             });
         }, 1000);
     };
-    $rootScope.next = function(number){
-        $location.path("/forgotpassword"+number);
+    $rootScope.next = function (number) {
+        $location.path("/forgotpassword" + number);
     }
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
         $timeout(function () {
@@ -54,7 +60,14 @@ app.controller("myctrl", function ($scope, $http, $rootScope, $location, $routeP
             $rootScope.isCollapsed = false;
         }
     });
-
+    $rootScope.checkLogin=function(){
+        if(!$rootScope.user){
+            alert("Please login to use this fearture")
+            return false;
+        }else{
+            return true;
+        }
+    }
 });
 app.controller("homectrl", function ($scope, $http, $rootScope, $location, $routeParams) {
     $scope.videos = [];
@@ -73,6 +86,13 @@ app.controller("homectrl", function ($scope, $http, $rootScope, $location, $rout
         });
     };
     $scope.loadMore();
+
+});
+app.controller("editprofilectrl", function ($scope, $http, $rootScope, $routeParams, $location, $q) {
+    if(!$rootScope.user){
+        alert("Please login to use this feature")
+        $location.path("/login")
+    }
 
 });
 app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routeParams, $location, $q) {
@@ -111,10 +131,7 @@ app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routePar
         } else if (checkboxNumber === 2 && $scope.checkbox1) {
             $scope.checkbox1 = false;
         }
-        if (($scope.checkbox1 && !$scope.checkbox2) || (!$scope.checkbox1 && $scope.checkbox2)) {
-            console.log("like video fire")
-            // console.log($scope.videoLikes.filter(value => value.))
-        }
+
     };
 
     $scope.commentsData = {};
@@ -135,7 +152,7 @@ app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routePar
     $scope.playCount = 0;
     $scope.initPlayer = function () {
         $scope.player = new Plyr("#plyr-video", {
-            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] }
+            speed: {selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]}
         });
         $scope.player.on('play', (event) => {
             $scope.playCount++;
@@ -146,10 +163,17 @@ app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routePar
         });
     };
     $scope.loadVideo = function (id) {
-        $http.get('streamVideo?videoId=' + id).then(function (response) {
-            $scope.videoUrl = response.data;
-            $scope.initPlayer();
-        });
+        if (!$rootScope.user) {
+            $http.get('streamVideo?videoId=' + id).then(function (response) {
+                $scope.videoUrl = response.data;
+                $scope.initPlayer();
+            });
+        } else {
+            $http.get('streamVideo?videoId=' + id + "&userId=" + $rootScope.user.id).then(function (response) {
+                $scope.videoUrl = response.data;
+                $scope.initPlayer();
+            });
+        }
         $http.get('api/like/get/likeCount?videoId=' + videoId).then(function (response) {
             if (response.data) {
                 $scope.videoLikes = response.data;
@@ -176,6 +200,7 @@ app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routePar
 
     };
     $scope.sendChildrenCommentToVideo = function (value, videoId, userId, commentId) {
+        console.log(commentId)
         $http.post('api/comment/post/commentVideo?videoId=' + videoId + '&userId=' + userId + '&parentId=' + commentId, value).then(function (response) {
             console.log($scope.commentsData[commentId])
             $scope.commentsData[commentId].push(response.data);
@@ -188,47 +213,66 @@ app.controller("videoDetailCtrl", function ($scope, $http, $rootScope, $routePar
 app.controller("loginctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
 
 
-
 });
 app.controller("registerctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
     $scope.userdangky;
     $scope.dangky = function () {
-
-        if ($scope.password == $scope.confirmpassword) {
-            console.log("da trung")
-            $scope.userdangky = {
-                username: $scope.username,
-                email: $scope.email,
-                password: $scope.password,
-                role: "USER"
-            }
-            $http.post("user/dangky", $scope.userdangky).then(function (response) {
-                console.log(response.data)
-                if (response.data.error) {
-                    $scope.errorMsg = response.data.error.split('\n');
-                } else if (response.data == null) {
-
-                }
-                else {
-                    $scope.errorMsg = null;
-                    $rootScope.user = response.data;
-                    $location.path("/home");
-                }
-
-            });
+        $scope.userdangky = {
+            username: $scope.username,
+            email: $scope.email,
+            password: $scope.password,
+            role: "USER"
         }
+        $http.post("user/dangky", $scope.userdangky).then(function (response) {
+            console.log(response.data)
+            if (response.data.error) {
+                $scope.errorMsg = response.data.error.split('\n');
+            } else if (response.data == null) {
+
+            } else {
+                $scope.errorMsg = null;
+                $rootScope.user = response.data;
+                $location.path("/home");
+            }
+
+        });
+
     }
 });
-app.controller("userChanelctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout) {
+app.controller("userChanelctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $q) {
     $scope.videos = [];
+    if ($rootScope.user) {
+        $http.get('video/userVideo?userId=' + $rootScope.user.id).then(function (response) {
+
+            if (response.data) {
+                console.log(response.data)
+                $scope.videos = response.data;
+            } else {
+                alert("Failed to get videos")
+            }
+        })
+    }else{
+        alert("Please login to use this fearture");
+        $location.path("/login")
+    }
+    $scope.isLogin = function () {
+        if (!$rootScope.user) {
+            if (confirm("Please login to use this feature")) {
+                $('#uploadVideo').modal('hide');
+                setTimeout(
+                    $location.path("/login")
+                    , 1000);
+            }
+        }
+    }
     $scope.uploadVideo = function () {
         if ($rootScope.user) {
             var formData = new FormData();
             formData.append('videoTitle', $scope.title);
-            formData.append('videoDescription', $scope.videoDescription);
+            formData.append('videoDescription', $scope.description);
             formData.append('videoFile', document.getElementById('videoFile').files[0]);
             formData.append('videoThumbnailFile', document.getElementById('videoThumbnailFile').files[0]);
-            formData.append('user',JSON.stringify($rootScope.user));
+            formData.append('user', JSON.stringify($rootScope.user));
             $http.post('video/upload', formData,
                 {
                     transformRequest: angular.identity,
@@ -238,7 +282,7 @@ app.controller("userChanelctrl", function ($scope, $http, $rootScope, $location,
                 }
             ).then(function (response) {
                 if (response.data.error) {
-                    $scope.errorMsg=response.data.error;
+                    alert(response.data.error)
                 } else {
                     $('#uploadVideo').modal('hide');
                     console.log(response.data)
@@ -246,22 +290,72 @@ app.controller("userChanelctrl", function ($scope, $http, $rootScope, $location,
                 }
             });
         } else {
-            $location.path("/login");
-        }
 
+        }
     }
+    $scope.selectedVideos = {};
+    $scope.hasSelected = false;
+    $scope.updateSelected = function () {
+        $scope.hasSelected = false;
+        for (var id in $scope.selectedVideos) {
+            if ($scope.selectedVideos[id]) {
+                $scope.hasSelected = true;
+                break;
+            }
+        }
+    };
+    $scope.videos = [];
+    $scope.doAction = function () {
+        var selectedVideos = [];
+        for (var id in $scope.selectedVideos) {
+            if ($scope.selectedVideos[id]) {
+                selectedVideos.push(id);
+            }
+        }
+        console.log(selectedVideos)
+        var deletePromises = selectedVideos.map(function (id) {
+            console.log(id)
+            return $http.delete('api/admin/video/delete?videoId=' + id);
+        });
+        $q.all(deletePromises).then(function (responses) {
+
+            for (var i = $scope.videos.length - 1; i >= 0; i--) {
+                if (selectedVideos.indexOf($scope.videos[i].id.toString()) !== -1) {
+                    $scope.videos.splice(i, 1);
+                }
+            }
+        });
+
+    };
+});
+app.controller("viewhistoryctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $filter) {
+    $scope.viewsHistory = [];
+    if ($rootScope.user) {
+        $http.get("api/user/get/viewHistory?userId=" + $rootScope.user.id).then(function (response) {
+            if (response.data) {
+                $scope.viewsHistory = response.data;
+                console.log(response.data);
+                $scope.viewsHistory.forEach(element => {
+                    element.viewDate = $filter('date')(element.viewDate, 'dd/MM/yyyy HH:mm:ss');
+                });
+            }
+        })
+    }else{
+        alert("Please login to use this fearture");
+        $location.path("/login")
+    }
+
+
 });
 app.controller("forgotctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
-   
+
 
 });
 app.controller("forgot2ctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
 
 
-
 });
 app.controller("forgot3ctrl", function ($scope, $http, $rootScope, $location, $routeParams, $route, $timeout, $window, $anchorScroll) {
-
 
 
 });

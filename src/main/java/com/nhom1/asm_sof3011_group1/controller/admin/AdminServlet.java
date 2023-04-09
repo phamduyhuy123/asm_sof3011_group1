@@ -39,6 +39,8 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String uri=req.getRequestURI();
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
         System.out.println(uri.equals("/admin"));
         if(uri.equals("/admin")){
             req.getRequestDispatcher("/views/index.jsp").forward(req,resp);
@@ -58,6 +60,8 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     	String uri = req.getRequestURI();
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
     	if(uri.contains("/api/admin/videos")) {
     		
     	}

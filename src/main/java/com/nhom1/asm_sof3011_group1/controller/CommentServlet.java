@@ -27,17 +27,10 @@ import java.util.stream.Collectors;
                 "/api/comment/get/childrenComment",
                 "/api/comment/post/commentVideo"})
 public class CommentServlet extends HttpServlet {
-    private CommentDao commentDao;
     private ObjectMapper mapper;
-    private UserDao userDao;
-    private VideoDao videoDao;
-
     @Override
     public void init(ServletConfig config) throws ServletException {
-        commentDao=new CommentDao();
         mapper = new ObjectMapper();
-        userDao=new UserDao();
-        videoDao=new VideoDao();
     }
 
     @Override
@@ -45,6 +38,7 @@ public class CommentServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         String uri=req.getRequestURI();
+        CommentDao commentDao =new CommentDao();
         Long videoId = req.getParameter("videoId")==null? null:Long.parseLong(req.getParameter("videoId"));
         if(uri.contains("comments") && videoId!=null){
 
@@ -81,6 +75,9 @@ public class CommentServlet extends HttpServlet {
         Long videoId = req.getParameter("videoId")==null? null:Long.parseLong(req.getParameter("videoId"));
         Long userId = req.getParameter("userId")==null? null:Long.parseLong(req.getParameter("userId"));
         Long commentId=req.getParameter("parentId")==null?null:Long.parseLong(req.getParameter("parentId"));
+        CommentDao commentDao =new CommentDao();
+        UserDao userDao=new UserDao();
+        VideoDao videoDao=new VideoDao();
         if(uri.contains("api/comment/post/commentVideo")){
             BufferedReader reader = new BufferedReader(new InputStreamReader(req.getInputStream(),"UTF-8"));
             StringBuilder stringBuilder = new StringBuilder();
@@ -93,7 +90,7 @@ public class CommentServlet extends HttpServlet {
             if(videoId!=null&&userId!=null){
                 //parent comment
                 if(commentId==null){
-
+                    System.out.println("parrent comment");
                     Long returnId= commentDao.insert(
                             Comment.builder()
                                     .commentDate(new Date())
@@ -112,6 +109,7 @@ public class CommentServlet extends HttpServlet {
                 }
                 //children comment
                 else {
+                    System.out.println("childrenComment");
                     System.out.println(commentId);
                     System.out.println(value);
                     Comment comment= Comment.builder()
